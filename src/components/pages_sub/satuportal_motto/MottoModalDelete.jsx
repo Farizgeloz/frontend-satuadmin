@@ -9,9 +9,12 @@ import { IoTrash } from "react-icons/io5";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2';
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
 
-const apiurl=process.env.REACT_APP_URL;
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const useropdlogin = userlogin.opd_id || '';
+const userloginadmin = userlogin.id || '';
 
 
 
@@ -20,7 +23,7 @@ function ModalDelete(props) {
   const name = props.name;
   
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -28,9 +31,30 @@ function ModalDelete(props) {
   const deleteUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.delete(apiurl+`api/open-item/komponen_delete/${id}`);
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses hapus data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      const payload = {
+        admin: userloginadmin,
+        jenis: "Satu Portal Motto",
+        komponen: "Delete Motto Satu Portal"
+      };
+
+      await api_url_satuadmin.delete(`api/open-item/komponen_delete/${id}`, {
+        data: payload, // body DELETE dikirim lewat "data"
+        headers: { 'Content-Type': 'application/json' }
+      });
       //navigate("/");
       setShow(false);
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
       
     } catch (error) {

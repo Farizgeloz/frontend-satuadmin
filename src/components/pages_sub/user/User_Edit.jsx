@@ -25,21 +25,27 @@ import { MdDashboard,MdDataset,MdOutlineErrorOutline,
         MdOutlineArrowCircleLeft,
         MdArrowCircleRight} from "react-icons/md";
 
-
+import qs from 'qs';
 
 import _ from "lodash";
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
+
+const rolelogin = localStorage.getItem('role');
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const useropdlogin = userlogin.opd_id || '';
+const userloginadmin = userlogin.id || '';
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -72,7 +78,6 @@ function UserEdit() {
   const [confpassword, setconfpassword] = useState("");
   const [role, setrole] = useState([]);
   const [satker, setsatker] = useState([]);
-  const [jabatan, setjabatan] = useState([]);
 
   const [showPassword, setShowPassword] = useState(false); // <-- ini dia
 
@@ -97,8 +102,12 @@ function UserEdit() {
   }, [satker]);
 
   const getDatasetItem = async () => {
-    const response = await axios.get(apiurl + "api/satupeta/map_item2");
-    const data = response.data;
+    const response = await api_url_satuadmin.get('api/open-item/satker', {
+      params: {
+        search_satker: useropdlogin
+      },
+      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' })
+    });
     setsatkerku(response.data.resultsatker);
   };
    
@@ -110,15 +119,14 @@ function UserEdit() {
   
 
   const getDataById = async () => {
-    const response = await axios.get(apiurl+`api/open-user/user/${id}`);
+    const response = await api_url_satuadmin.get(`api/open-user/user/${id}`);
     setid(response.data.uuid);
     setname(response.data.name);
     setnick(response.data.nick);
     setemail(response.data.email);
     //setpassword(response.data.password);
     setrole({ value: response.data.role, label: response.data.role });
-    setsatker({ value: response.data.satker_id, label: response.data.nama_opd });
-    setjabatan({ value: response.data.jabatan, label: response.data.jabatan });
+    setsatker({ value: response.data.opd_id, label: response.data.nama_opd });
    
   };
 
@@ -132,10 +140,12 @@ function UserEdit() {
       formData.append("password",password);
       formData.append("confpassword",confpassword);
       formData.append("role",role.value);
-      formData.append("satker_id",satker.value);
-      formData.append("jabatan",jabatan.value);
+      formData.append("opd_id",satker.value);
+      formData.append("admin",userloginadmin);
+      formData.append("jenis", "Satu Admin Pengguna");
+      formData.append("komponen", "Update Pengguna Satu Admin" );
       try {
-        await axios.patch(`${apiurl}api/open-user/user/update/${idku}`, formData, {
+        await api_url_satuadmin.patch(`api/open-user/user/update/${idku}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -203,7 +213,6 @@ function UserEdit() {
     const [validasi_repassword, setvalidasi_repassword] = useState(false);
     const [validasi_role, setvalidasi_role] = useState(false);
     const [validasi_satker, setvalidasi_satker] = useState(false);
-    const [validasi_jabatan, setvalidasi_jabatan] = useState(false);
   
     const handle_step1 = () => {
       const isNameValid = name?.length >= 5;
@@ -215,11 +224,9 @@ function UserEdit() {
   
       // default false
       let isSatkerValid = true;
-      let isJabatanValid = true;
   
       if (role?.value !== "Super Admin") {
         isSatkerValid = !!satker?.value;
-        isJabatanValid = !!jabatan?.value;
       }
   
       // Set state error messages
@@ -230,10 +237,9 @@ function UserEdit() {
       setvalidasi_repassword(!isRepasswordValid);
       setvalidasi_role(!isRoleValid);
       setvalidasi_satker(!isSatkerValid);
-      setvalidasi_jabatan(!isJabatanValid);
   
       // Gabung semua validasi jadi satu
-      const isValid = isNameValid && isNickValid && isEmailValid  && isRepasswordValid && isRoleValid && isSatkerValid && isJabatanValid;
+      const isValid = isNameValid && isNickValid && isEmailValid  && isRepasswordValid && isRoleValid && isSatkerValid;
   
       if (isValid) {
         nextStep();
@@ -242,21 +248,47 @@ function UserEdit() {
       }
     };
 
+    const getRoleOptions = () => {
+      if (rolelogin === "Super Admin") {
+        return [
+          { label: "Admin", value: "Admin" },
+          { label: "Operator", value: "Operator" },
+          { label: "Operator Opd", value: "Operator Opd" },
+          { label: "Verifikator", value: "Verifikator" },
+          { label: "CS", value: "CS" },
+          { label: "Super Admin", value: "Super Admin" },
+        ];
+      } else if (rolelogin === "Admin") {
+        return [
+          { label: "Operator", value: "Operator" },
+          { label: "Operator Opd", value: "Operator Opd" },
+          { label: "Verifikator", value: "Verifikator" },
+          { label: "CS", value: "CS" },
+        ];
+        
+      } else if (rolelogin === "Operator") {
+        return [
+          { label: "Operator", value: "Operator" },
+        ]; // atau return [] jika tidak boleh pilih sama sekali
+      } else {
+        return [];
+      }
+    };
 
 
   return (
     <div className="bg-gray-100  h-95    overflow-auto z-5 max-[640px]:mt-10">
       <NavSub  title="User Edit" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex textsize10">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Data-User" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Data User
+          <NavLink to="/Data-User" className="text-silver-a mr-2 d-flex textsize10">
+            <MdDataset className="mt-1 textsize10" />Data User
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdEditSquare className="mt-1 textsize8" />Edit
+          <NavLink  className="text-silver-a mr-2 d-flex textsize10">
+            <MdEditSquare className="mt-1 textsize10" />Edit
           </NavLink>
         </p>
       </div>
@@ -501,53 +533,13 @@ function UserEdit() {
                                 
                             </div>
                           </div>
-                          <div className="col-span-2 -mt-2">
-                            <div className=" grid grid-cols-1">
-                                <Autocomplete
-                                  className="tsize-110"
-                                  isOptionEqualToValue={(option, value) => option?.value === value?.value}
-                                  id="combo-box-location"
-                                  options={[
-                                    { label: "Operator", value: "Operator" },
-                                    { label: "Eksekutif", value: "Eksekutif" }
-                                  ]}
-                                  getOptionLabel={(option) => option.label || ""}
-                                  value={jabatan}
-                                  onChange={(event, newValue) => setjabatan(newValue)}
-                                  clearOnEscape
-                                  renderInput={(params) => (
-                                    <TextField
-                                      {...params}
-                                      label="Jabatan"
-                                      variant="outlined"
-                                      sx={(theme) => textFieldStyle(theme)}
-                                    />
-                                  )}
-                                  sx={{
-                                    width: "100%",
-                                    "& .MuiAutocomplete-popupIndicator": {
-                                      color: "#1976d2",
-                                      transition: "transform 0.3s",
-                                    },
-                                    "& .MuiAutocomplete-popupIndicatorOpen": {
-                                      transform: "rotate(180deg)",
-                                    },
-                                  }}
-                                />
-                                {validasi_jabatan && <p className="transisi mb-0 text-red-700 d-flex"><MdOutlineErrorOutline className="mt-1 mx-2" />Harus Dipilih.</p>}
-                            </div>
-                          </div>
                           <div className="sm:col-span-2 -mt-2">
                               <div className="mt-0">
                                 <Autocomplete
                                   className="tsize-110"
                                   isOptionEqualToValue={(option, value) => option?.value === value?.value}
                                   id="combo-box-location"
-                                  options={[
-                                    { label: "User", value: "User" },
-                                    { label: "Admin", value: "Admin" },
-                                    { label: "Super Admin", value: "Super Admin" }
-                                  ]}
+                                  options={getRoleOptions()}
                                   getOptionLabel={(option) => option.label || ""}
                                   value={role}
                                   onChange={(event, newValue) => setrole(newValue)}
@@ -585,7 +577,7 @@ function UserEdit() {
                                 onClick={() => {
                                   handle_step1();
                                 }}
-                                className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <span>Lanjut</span><MdArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                               
@@ -620,7 +612,7 @@ function UserEdit() {
                         <div className="-mt-5 w-full h-2 bg-cyan-200">
                             <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                         </div>
-                        <div className="mt-12 text-base  text-center">
+                        <div className="mt-12 textsize10  text-center">
                             Yakin Data Sudah Benar ?
                         </div>
                         <div>
@@ -633,7 +625,7 @@ function UserEdit() {
                               </button>
                               <button 
                                   type="submit"
-                                  className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                  className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                   <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                               </button>
                             </div>

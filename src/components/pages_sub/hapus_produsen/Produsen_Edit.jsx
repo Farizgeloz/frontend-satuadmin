@@ -28,8 +28,8 @@ import { MdDashboard,MdDataset,MdOutlineErrorOutline,
 
 
 import _ from "lodash";
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
 
 
 
@@ -62,7 +62,7 @@ function UserEdit() {
   
 
   const getDataById = async () => {
-    const response = await axios.get(apiurl+`backend_satudata_produsen/${id}`);
+    const response = await api_url_satuadmin.get(`backend_satudata_produsen/${id}`);
     setid(response.data.id);
     setkode(response.data.kode);
     setwilayah(response.data.wilayah);
@@ -85,7 +85,7 @@ function UserEdit() {
 
         if(kode.length>=3 && wilayah.length>=3 && organisasi.length>=3){
           try {
-          await axios.patch(`http://localhost:5000/backend_satudata_produsen/${idku}`, formData, {
+          await api_url_satuadmin.patch(`backend_satudata_produsen/${idku}`, formData, {
               headers: {
               "Content-type": "multipart/form-data",
               },
@@ -143,15 +143,15 @@ function UserEdit() {
     <div className="bg-gray-100  h-95    overflow-auto z-5 max-[640px]:mt-10">
       <NavSub  title="User Edit" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Data-Dataset" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Dataset
+          <NavLink to="/Data-Dataset" className="text-silver-a mx-2 d-flex">
+            <MdDataset className="mt-1 textsize10" />Dataset
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdEditSquare className="mt-1 textsize8" />Edit
+          <NavLink  className="text-silver-a mx-2 d-flex">
+            <MdEditSquare className="mt-1 textsize10" />Edit
           </NavLink>
         </p>
       </div>
@@ -222,7 +222,7 @@ function UserEdit() {
                         
                         <button 
                             type="submit"
-                            className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                            className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                             <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                         </button>
                             

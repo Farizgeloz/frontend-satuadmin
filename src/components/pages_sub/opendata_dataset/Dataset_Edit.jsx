@@ -40,18 +40,19 @@ import Tabs from 'react-bootstrap/Tabs';
 
 import { readString } from 'react-papaparse';
 import _ from "lodash";
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
     height: 50,
-    fontSize: "0.9rem",
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -134,7 +135,7 @@ function DatasetPengelolah() {
   
 
   const getDatasetItem = async () => {
-    const response = await axios.get(apiurl + 'api/opendata/dataset_item');
+    const response = await api_url_satuadmin.get('api/opendata/dataset_item');
 
     const data = response.data;
     setProdukDataku(response.data.resultSatker);
@@ -143,7 +144,7 @@ function DatasetPengelolah() {
   
 
   const getDataById = async () => {
-    const response = await axios.get(apiurl+`api/opendata/dataset_data_detail/${id}`);
+    const response = await api_url_satuadmin.get(`api/opendata/dataset_data_detail/${id}`);
     setid(response.data.id);
     setkode(response.data.kode);
     setwilayah(response.data.wilayah);
@@ -186,7 +187,7 @@ function DatasetPengelolah() {
     formData.append("keterangan",keterangan);
     formData.append("tag",tag);
     try {
-      await axios.patch(`${apiurl}api/opendata/dataset_data_update/${idku}`, formData, {
+      await axios.patch(`api/opendata/dataset_data_update/${idku}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -307,15 +308,15 @@ function DatasetPengelolah() {
     <div className="bg-gray-100  h-95    overflow-auto z-5 max-[640px]:mt-10">
       <NavSub  title="Dataset Edit" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Opendata/Dataset" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Dataset
+          <NavLink to="/Opendata/Dataset" className="text-silver-a mx-2 d-flex">
+            <MdDataset className="mt-1 textsize10" />Dataset
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdEditSquare className="mt-1 textsize8" />Edit
+          <NavLink  className="text-silver-a mx-2 d-flex">
+            <MdEditSquare className="mt-1 textsize10" />Edit
           </NavLink>
         </p>
       </div>
@@ -557,7 +558,7 @@ function DatasetPengelolah() {
                                 onClick={() => {
                                   handle_step1();
                                 }}
-                                className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <span>Lanjut</span><MdArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                               
@@ -702,7 +703,7 @@ function DatasetPengelolah() {
                         <div className="flex justify-center mt-12">
 
                           <button 
-                              onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
+                              onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
                               <MdOutlineArrowCircleLeft   className='mt-1 mx-1'  /><span>Kembali</span>
                           </button>
                           
@@ -711,7 +712,7 @@ function DatasetPengelolah() {
                             onClick={() => {
                               handle_step2();
                             }} 
-                            className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                            className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                               <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                           </button>
                         </div>
@@ -844,12 +845,12 @@ function DatasetPengelolah() {
                           <div className="flex justify-center mt-12">
 
                             <button 
-                                onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
+                                onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
                                 <MdOutlineArrowCircleLeft   className='mt-1 mx-1'  /><span>Kembali</span>
                             </button>
                             
                             <button 
-                                onClick={nextStep} className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                onClick={nextStep} className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                           </div>
@@ -898,7 +899,7 @@ function DatasetPengelolah() {
                           <div className="-mt-5 w-full h-2 bg-cyan-200">
                               <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                           </div>
-                          <div className="mt-12 text-base  text-center">
+                          <div className="mt-12 textsize10  text-center">
                               Yakin Data Sudah Benar ?
                           </div>
                           <div>
@@ -906,12 +907,12 @@ function DatasetPengelolah() {
                                 <button 
                                     type="button"
                                     onClick={prevStep}
-                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                     <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                 </button>
                                 <button 
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                    className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                     <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                 </button>
                               </div>

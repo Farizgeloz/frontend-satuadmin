@@ -9,9 +9,12 @@ import { IoTrash } from "react-icons/io5";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2';
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
 
-const apiurl=process.env.REACT_APP_URL;
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const useropdlogin = userlogin.opd_id || '';
+const userloginadmin = userlogin.id || '';
 
 
 
@@ -28,13 +31,22 @@ function ModalDelete(props) {
   const deleteUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.delete(apiurl+`api/open-user/user/delete/${id}`);
-      //navigate("/");
+      const payload = {
+        admin: userloginadmin,
+        jenis: "Satu Admin Pengguna",
+        komponen: "Delete Pengguna Satu Admin"
+      };
+
+      await api_url_satuadmin.delete(`api/open-user/user/delete/${id}`, {
+        data: payload, // body DELETE dikirim lewat "data"
+        headers: { 'Content-Type': 'application/json' }
+      });
+
       setShow(false);
       sweetsuccess();
-      
+
     } catch (error) {
-      console.log(error);
+      console.error(error);
       sweeterror();
     }
   };

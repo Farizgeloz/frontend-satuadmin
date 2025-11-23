@@ -28,18 +28,20 @@ import _ from "lodash";
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from "@mui/icons-material/Clear";
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const userloginadmin = userlogin.id || '';
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -70,7 +72,7 @@ function DatasetPengelolah() {
   const [kecamatan, setkecamatan] = useState(null);
   const [lokasi, setlokasi] = useState(null);
   const [desa, setdesa] = useState(null);
-
+  const [loading, setLoading] = useState(false);
 
   
   
@@ -95,7 +97,7 @@ function DatasetPengelolah() {
   }, [kecamatan]);
 
   const getDatasetItem = async () => {
-    const response = await axios.get(apiurl + "api/satupeta/map_data/admin", {
+    const response = await api_url_satuadmin.get("api/satupeta/map_data/admin", {
       params: { search_kecamatan: kecamatan ? kecamatan.value : "" }
     });
     const data = response.data;
@@ -105,7 +107,7 @@ function DatasetPengelolah() {
   };
 
   const getDatasetItem2 = async () => {
-    const response = await axios.get(apiurl + "api/satupeta/map_data/admin", {
+    const response = await api_url_satuadmin.get("api/satupeta/map_data/admin", {
       params: { search_kecamatan: kecamatan ? kecamatan.value : "" }
     });
     const data = response.data;
@@ -115,7 +117,7 @@ function DatasetPengelolah() {
 
   const getDataById = async () => {
     try {
-      const response = await axios.get(apiurl + `api/satupeta/location_point/detail/${id}`);
+      const response = await api_url_satuadmin.get(`api/satupeta/location_point/detail/${id}`);
 
       // Ambil data utama
       setnama_location_point(response.data.nama_location_point);
@@ -149,12 +151,27 @@ function DatasetPengelolah() {
     formData.append("location_id",lokasi.value);
     formData.append("kecamatan_id",kecamatan.value);
     formData.append("desa_id",desa.value);
+    formData.append("admin",userloginadmin);
+    formData.append("jenis","Satu Peta Titik Lokasi");
+    formData.append("komponen","Update Titik Lokasi Satu Peta");
     try {
-      await axios.patch(`${apiurl}api/satupeta/location_point/update/${id}`, formData, {
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses update data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.patch(`api/satupeta/location_point/update/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
      
     } catch (error) {
@@ -178,7 +195,7 @@ function DatasetPengelolah() {
           
         },
         willClose: () => {
-              navigate(`/Satupeta/LocationPoint`);
+              navigate(`/Satupeta/Titik-Lokasi-Peta`);
               //navigate(`/Data-Dataset`);
         }
       }).then((result) => {
@@ -275,17 +292,17 @@ function DatasetPengelolah() {
 
   return (
     <div className="bg-gray-100  h-95    overflow-auto z-5 max-[640px]:mt-10">
-      <NavSub  title="Dataset Edit" />
+      <NavSub  title="Satupeta Titik Lokasi Peta Edit" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex textsize10">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Satupeta/LocationPoint" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Location Point
+          <NavLink to="/Satupeta/Titik-Lokasi-Peta" className="text-silver-a mr-2 d-flex textsize10">
+            <MdDataset className="mt-1 textsize10" />Titik Lokasi
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdEditSquare className="mt-1 textsize8" />Edit
+          <NavLink  className="text-silver-a mr-2 d-flex textsize10">
+            <MdEditSquare className="mt-1 textsize10" />Edit
           </NavLink>
         </p>
       </div>
@@ -547,7 +564,7 @@ function DatasetPengelolah() {
                                 onClick={() => {
                                   handle_step();
                                 }}
-                                className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <span>Lanjut</span><MdArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                               
@@ -585,7 +602,7 @@ function DatasetPengelolah() {
                           <div className="-mt-5 w-full h-2 bg-cyan-200">
                               <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                           </div>
-                          <div className="mt-12 text-base  text-center">
+                          <div className="mt-12 textsize10  text-center">
                               Yakin Data Sudah Benar ?
                           </div>
                           <div>
@@ -593,12 +610,12 @@ function DatasetPengelolah() {
                                 <button 
                                     type="button"
                                     onClick={prevStep}
-                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                     <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                 </button>
                                 <button 
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                    className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                     <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                 </button>
                               </div>

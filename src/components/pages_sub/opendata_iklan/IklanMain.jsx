@@ -8,9 +8,10 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import NavSub from "../../NavSub";
 import IklanModalTambah from "./IklanModalTambah";
 import IklanModalDelete from "./IklanModalDelete";
-import { Col, Container, Row } from "react-bootstrap";
+import Activity from "../log/Activity";
+import { Col, Container, Row,Tabs, Tab } from "react-bootstrap";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-const apiurl = process.env.REACT_APP_URL;
 
 const Spinner = () => <div className="loader"></div>;
 
@@ -37,7 +38,7 @@ export default function Iklanlist() {
   }, []);
 
   const getIklanSearch = async () => {
-    const res = await axios.get(`${apiurl}api/open-item/opendata-iklan`);
+    const res = await api_url_satuadmin.get(`api/open-item/opendata-iklan`);
     const data = res.data.resultWithUrls2 || [];
     setDatasetku(data);
     setRowsFiltered(data);
@@ -78,14 +79,34 @@ export default function Iklanlist() {
       headerName: "Judul", 
       flex: 3,  // 30%
       headerClassName: "custom-header", // kelas custom
-      minWidth: 100 
+      minWidth: 100,
+      renderCell: (params) => {
+        const row = params.row;
+        return (
+          <>
+            <p className="textsize10">
+              {row.title}
+            </p>
+          </>
+        );
+      }  
     },
     { 
       field: "linked", 
       headerName: "Link", 
-      flex: 2,  // 20%
+      flex: 3,  // 20%
       headerClassName: "custom-header", // kelas custom
-      minWidth: 100 
+      minWidth: 100,
+      renderCell: (params) => {
+        const row = params.row;
+        return (
+          <>
+            <p className="textsize10">
+              {row.linked}
+            </p>
+          </>
+        );
+      }  
     },
     {
       field: "presignedUrl",
@@ -116,7 +137,17 @@ export default function Iklanlist() {
       headerName: "Visibilitas", 
       flex: 1,  // 10%
       headerClassName: "custom-header", // kelas custom
-      minWidth: 100 
+      minWidth: 100,
+      renderCell: (params) => {
+        const row = params.row;
+        return (
+          <>
+            <p className="textsize10">
+              {row.visibilitas}
+            </p>
+          </>
+        );
+      }  
     },
     {
       field: "aksi",
@@ -132,7 +163,7 @@ export default function Iklanlist() {
         <div className="gap-2 p-2">
           <Link to={`/Opendata/Iklan/Update/${params.row.title}`}>
             <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-3 rounded-xl flex items-center">
-              <MdEditSquare className="mr-1" />
+              <MdEditSquare className="mr-1"  size={18}/>
             </button>
           </Link>
           <IklanModalDelete id={params.row.id} name={params.row.title} />
@@ -155,11 +186,11 @@ export default function Iklanlist() {
       <div className="col-span-3 grid grid-cols-1 md:grid-cols-6 gap-4">
         <div className="col-span-3">
           <p className="font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 flex">
+            <NavLink to="/Dashboard" className="textsize10 text-silver-a mr-2 flex">
               <MdDashboard className="mt-1" /> Dashboard
             </NavLink>{" "}
             /{" "}
-            <NavLink to="#" className="text-link-sky mx-2 flex">
+            <NavLink to="#" className="textsize10 text-silver-a mx-2 flex">
               <MdDataset className="mt-1" /> Opendata Iklan
             </NavLink>
           </p>
@@ -171,85 +202,99 @@ export default function Iklanlist() {
 
       <div className="drop-shadow-lg overflow-auto mb-9 p-2">
         <section className="py-3 rounded-lg bg-white px-2">
-          <div className="text-center mb-3">
-            <p className="text-gray-500 text-sm">
-              Pencarian berdasarkan Judul.
-            </p>
-          </div>
+          
 
           <Container fluid>
-            <Row className='portfoliolist'>
-              <Col sm={12}>
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  viewport={{ once: true }}
-                >
-                  <ThemeProvider theme={theme}>
-                    <DataGrid
-                      loading={loading}
-                      rows={filteredRows}
-                      columns={columns}
-                      pageSizeOptions={[5, 10, 50, 100]}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { pageSize: 10, page: 0 }
-                        }
-                      }}
-                    
-                      disableSelectionOnClick
-                      getRowHeight={() => 'auto'}
-                      
-                      sx={{
-                        "& .custom-header": {
-                          backgroundColor: "#1886ca",
-                          color: "white",
-                          fontWeight: "bold",
-                          textTransform: "uppercase",
-                          fontSize: "80%"
-                        },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon": {
-                          opacity: 1,
-                          visibility: "visible",
-                          width: "auto",
-                          color: "#fff"
-                        },
-                        "& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon": {
-                          opacity: 1
-                        },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon button svg": {
-                          fill: "#fff"
-                        },
-                        '& .MuiDataGrid-cell': {
-                          whiteSpace: 'normal', // biar teks wrap
-                          lineHeight: '1.2rem',  // lebih rapat
-                          padding: '8px'
-                        },
-                        "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
-                          display: "none" // sembunyikan opsi default MUI yang tidak diinginkan
-                        },
-                        "& .MuiTablePagination-selectLabel": {
-                          color: "#444",
-                          fontWeight: "bold",
-                          marginTop: "15px"
-                        },
-                        "& .MuiTablePagination-displayedRows": {
-                          color: "#666",
-                          marginTop: "15px"
-                        },
-                        "& .MuiTablePagination-select": {
-                          color: "#000",
-                          fontWeight: "600",
-                          backgroundColor: "#dbdbdb",
-                          borderRadius: "6px"
-                        }
-                      }}
-                    />
-                  </ThemeProvider>
-                </motion.div>
-              </Col>
-            </Row>
+            <Tabs
+              defaultActiveKey="tabel"
+              id="example-tabs"
+              className="mb-3"
+            >
+              <Tab eventKey="tabel" title="Tabel">
+                <div className="text-center mb-3">
+                  <p className="text-gray-500 text-sm">
+                    Pencarian berdasarkan Judul.
+                  </p>
+                </div>
+                <Row className='portfoliolist'>
+                  <Col sm={12}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      viewport={{ once: true }}
+                    >
+                      <ThemeProvider theme={theme}>
+                        <DataGrid
+                          loading={loading}
+                          rows={filteredRows}
+                          columns={columns}
+                          pageSizeOptions={[5, 10, 50, 100]}
+                          initialState={{
+                            pagination: {
+                              paginationModel: { pageSize: 10, page: 0 }
+                            }
+                          }}
+                        
+                          disableSelectionOnClick
+                          getRowHeight={() => 'auto'}
+                          
+                          sx={{
+                            "& .custom-header": {
+                              backgroundColor: "#1886ca",
+                              color: "white",
+                              fontWeight: "bold",
+                              textTransform: "uppercase",
+                              fontSize: "100%"
+                            },
+                            "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon": {
+                              opacity: 1,
+                              visibility: "visible",
+                              width: "auto",
+                              color: "#fff"
+                            },
+                            "& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon": {
+                              opacity: 1
+                            },
+                            "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon button svg": {
+                              fill: "#fff"
+                            },
+                            '& .MuiDataGrid-cell': {
+                              whiteSpace: 'normal', // biar teks wrap
+                              lineHeight: '1.2rem',  // lebih rapat
+                              padding: '8px'
+                            },
+                            "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
+                              display: "none" // sembunyikan opsi default MUI yang tidak diinginkan
+                            },
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#444",
+                              fontWeight: "bold",
+                              marginTop: "15px"
+                            },
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#666",
+                              marginTop: "15px"
+                            },
+                            "& .MuiTablePagination-select": {
+                              color: "#000",
+                              fontWeight: "600",
+                              backgroundColor: "#dbdbdb",
+                              borderRadius: "6px"
+                            }
+                          }}
+                        />
+                      </ThemeProvider>
+                    </motion.div>
+                  </Col>
+                </Row>            
+              </Tab>
+
+              <Tab eventKey="aktivitas" title="Aktivitas">
+                  <Activity kunci={'Open Data Iklan'}/>
+              </Tab>
+            </Tabs>
+            
           </Container>
         </section>
       </div>

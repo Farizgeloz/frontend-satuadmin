@@ -6,12 +6,14 @@ import { motion } from "framer-motion";
 import { DataGrid } from "@mui/x-data-grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import NavSub from "../../NavSub";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row,Tabs, Tab } from "react-bootstrap";
 import IklanModalTambah from "./IklanModalTambah";
 import IklanModalDelete from "./IklanModalDelete";
+import Activity from "../log/Activity";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
 
-const apiurl = process.env.REACT_APP_URL;
+const apiurl =  import.meta.env.VITE_API_URL;;
 
 const Spinner = () => <div className="loader"></div>;
 
@@ -38,7 +40,7 @@ export default function Iklanlist() {
   }, []);
 
   const getIklanSearch = async () => {
-    const res = await axios.get(`${apiurl}api/open-item/ekosistem-iklan`);
+    const res = await api_url_satuadmin.get(`api/open-item/ekosistem-iklan`);
     const data = res.data.resultWithUrls2 || [];
     setDatasetku(data);
     setRowsFiltered(data);
@@ -79,12 +81,24 @@ export default function Iklanlist() {
       headerName: "Judul", 
       flex: 3,  // 30%
       headerClassName: "custom-header", // kelas custom
+      renderCell: (params) => {
+        const row = params.row;
+        return (
+          <p className="textsize10">{row.title}</p>
+        );
+      }
     },
     { 
       field: "linked", 
       headerName: "Link", 
       flex: 2,  // 20%
       headerClassName: "custom-header", // kelas custom
+      renderCell: (params) => {
+        const row = params.row;
+        return (
+          <p className="textsize10">{row.linked}</p>
+        );
+      }
     },
     {
       field: "presignedUrl",
@@ -127,7 +141,7 @@ export default function Iklanlist() {
         <div className="gap-2 p-2">
           <Link to={`/Satuportal/Iklan/Update/${params.row.title}`}>
             <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-3 rounded-xl flex items-center">
-              <MdEditSquare className="mr-1" />
+              <MdEditSquare className="mr-1"  size={18}/>
             </button>
           </Link>
           <IklanModalDelete id={params.row.id} name={params.row.title} />
@@ -149,101 +163,152 @@ export default function Iklanlist() {
       <div className="col-span-3 grid grid-cols-1 md:grid-cols-6 gap-4">
         <div className="col-span-3">
           <p className="font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 flex">
-              <MdDashboard className="mt-1" /> Dashboard
+            <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex textsize10">
+              <MdDashboard className="mt-1 textsize10" /> Dashboard
             </NavLink>{" "}
             /{" "}
-            <NavLink to="#" className="text-link-sky mx-2 flex">
-              <MdDataset className="mt-1" /> Satuportal Iklan
+            <NavLink to="#" className="text-silver-a mr-2 d-flex textsize10">
+              <MdDataset className="mt-1 textsize10" /> Satuportal Iklan
             </NavLink>
           </p>
         </div>
-        <div className="md:col-span-2 px-10 mt-2">
+        <div className="md:col-span-3 margin-0 px-10 mt-2">
           <IklanModalTambah />
         </div>
       </div>
 
       <div className="drop-shadow-lg overflow-auto mb-9 p-2">
         <section className="py-3 rounded-lg bg-white px-2">
-          <div className="text-center mb-3">
-            <p className="text-gray-500 text-sm">
-              Pencarian berdasarkan Judul.
-            </p>
-          </div>
-
+         
           <Container fluid>
-            <Row className='portfoliolist'>
-              <Col sm={12}>
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  viewport={{ once: true }}
-                >
-                  <ThemeProvider theme={theme}>
-                    <DataGrid
-                      loading={loading}
-                      rows={filteredRows}
-                      columns={columns}
-                      pageSizeOptions={[5, 10, 50, 100]}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { pageSize: 10, page: 0 }
-                        }
-                      }}
-                    
-                      disableSelectionOnClick
-                      getRowHeight={() => 'auto'}
-                      
-                      sx={{
-                        "& .custom-header": {
-                          backgroundColor: "#1886ca",
-                          color: "white",
-                          fontWeight: "bold",
-                          textTransform: "uppercase",
-                          fontSize: "80%"
-                        },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon": {
-                          opacity: 1,
-                          visibility: "visible",
-                          width: "auto",
-                          color: "#fff"
-                        },
-                        "& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon": {
-                          opacity: 1
-                        },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon button svg": {
-                          fill: "#fff"
-                        },
-                        '& .MuiDataGrid-cell': {
-                          whiteSpace: 'normal', // biar teks wrap
-                          lineHeight: '1.2rem',  // lebih rapat
-                          padding: '8px'
-                        },
-                        "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
-                          display: "none" // sembunyikan opsi default MUI yang tidak diinginkan
-                        },
-                        "& .MuiTablePagination-selectLabel": {
-                          color: "#444",
-                          fontWeight: "bold",
-                          marginTop: "15px"
-                        },
-                        "& .MuiTablePagination-displayedRows": {
-                          color: "#666",
-                          marginTop: "15px"
-                        },
-                        "& .MuiTablePagination-select": {
-                          color: "#000",
-                          fontWeight: "600",
-                          backgroundColor: "#dbdbdb",
-                          borderRadius: "6px"
-                        }
-                      }}
-                    />
-                  </ThemeProvider>
-                </motion.div>
-              </Col>
-            </Row>
+            <Tabs
+              defaultActiveKey="home"
+              id="example-tabs"
+              className="mb-3"
+            >
+              <Tab eventKey="home" title="Tabel">
+                <Row className='portfoliolist'>
+                  <Col sm={12}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      viewport={{ once: true }}
+                    >
+                      <ThemeProvider theme={theme}>
+                        <DataGrid
+                          loading={loading}
+                          rows={filteredRows}
+                          columns={columns}
+                          pageSizeOptions={[5, 10, 50, 100]}
+                          initialState={{
+                            pagination: {
+                              paginationModel: { pageSize: 10, page: 0 }
+                            }
+                          }}
+                        
+                          disableSelectionOnClick
+                          getRowHeight={() => 'auto'}
+                          autoHeight // <- ini penting biar tidak scroll
+                          localeText={{
+                            noRowsLabel: "📭 Data Tidak Ditemukan", // ganti teks default
+                            toolbarDensity: 'Kepadatan',
+                            toolbarDensityLabel: 'Kepadatan',
+                            toolbarDensityCompact: 'Kompak',
+                            toolbarDensityStandard: 'Standar',
+                            toolbarDensityComfortable: 'Nyaman',
+                            toolbarFilters: 'Filter',
+                            toolbarFiltersLabel: 'Tampilkan filter',
+                            toolbarFiltersTooltipHide: 'Sembunyikan filter',
+                            toolbarFiltersTooltipShow: 'Tampilkan filter',
+                            footerPaginationRowsPerPage: 'Baris per halaman', // Ganti "Rows per page"
+                            footerRowSelected: (count) =>
+                              count !== 1
+                                ? `${count.toLocaleString()} baris dipilih`
+                                : `${count.toLocaleString()} baris dipilih`,
+                          }}
+                          
+                          sx={{
+                            "--DataGrid-color-background-base": "transparent",
+                              backgroundColor: "transparent !important", // paksa transparan table
+                              border: "none", // hilangkan border utama,
+                              marginBottom:"50px",
+                            "& .MuiDataGrid-root": {
+                              backgroundColor: "transparent", // ⬅ background utama transparan
+                              marginBottom:"50px"
+                            },
+                            "& .MuiDataGrid-row": {
+                              marginTop: "8px",
+                              paddingTop:"10px",
+                              paddingBottom:"10px",
+                              paddingLeft:"5px",
+                              paddingRight:"5px",
+                              backgroundColor: "rgba(255, 255, 255, 0.9)", // bisa dihapus kalau mau full transparan
+                              borderRadius: "6px",
+                              boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
+                              fontSize: "100%"
+                              
+                            },
+                            "& .custom-header": {
+                              backgroundColor: "#1886ca",
+                              color: "white",
+                              fontWeight: "bold",
+                              textTransform: "uppercase",
+                              fontSize: "120%"
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              overflow: "auto !important" // ⬅ hilangkan scroll
+                            },
+                            "& .MuiDataGrid-cell": {
+                              backgroundColor: "transparent", // ⬅ background cell transparan
+                              borderTop:"none"
+                            },
+                            "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
+                              display: "none"
+                            },
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#444",
+                              fontWeight: "bold",
+                              marginTop: "15px"
+                            },
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#666",
+                              marginTop: "15px"
+                            },
+                            "& .MuiTablePagination-select": {
+                              color: "#000",
+                              fontWeight: "600",
+                              backgroundColor: "#dbdbdb",
+                              borderRadius: "6px"
+                            },
+                            // style kalau tidak ada data
+                            "& .MuiDataGrid-overlay": {
+                              backgroundColor: "#fff", // transparan
+                              height: "100px",
+                              fontSize: "18px",
+                              fontWeight: "bold",
+                              fontStyle:"italic",
+                              color: "#888",
+                              marginTop: "-10%",
+                              paddingTop: "40px",
+                              textTransform: "uppercase",
+                              borderRadius: "6px",
+                            },
+                          }}
+                        />
+                      </ThemeProvider>
+                    </motion.div>
+                  </Col>
+                </Row>
+              </Tab>
+
+              <Tab eventKey="profile" title="Aktivitas">
+                  <Activity kunci={'Satu Portal Iklan'}/>
+              </Tab>
+
+             
+            </Tabs>
+            
           </Container>
         </section>
       </div>

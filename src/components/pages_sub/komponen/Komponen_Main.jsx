@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, NavLink } from "react-router-dom";
-import {Container,Row,Col} from 'react-bootstrap';
+import {Container,Row,Col,Tabs, Tab} from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
 import { motion } from "framer-motion";
 import { DataGrid } from "@mui/x-data-grid";
@@ -12,11 +12,9 @@ import Tooltip from '@mui/material/Tooltip';
 
 
 
-import "../../../App.css";
+import "../../styles/App.css";
 import NavSub from "../../NavSub";
-import AccordionCard from '../../accordion/AccordionCard';
-import Satuportal_listModalTambah from "./Komponen_ModalTambah";
-import Satuportal_listModalDelete from "./Komponen_ModalDelete";
+import Activity from "../log/Activity";
 
 
 import { MdDashboard,MdDataset,MdInfoOutline,
@@ -24,9 +22,9 @@ import { MdDashboard,MdDataset,MdInfoOutline,
 
 import { FaBuildingColumns, FaCodeCommit, FaHospitalUser, FaMoneyBillTrendUp, FaTreeCity } from "react-icons/fa6";
 import { FaBuilding, FaEnvira, FaGraduationCap, FaPeopleArrows, FaUsers } from "react-icons/fa";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
 //const apikey=process.env.REACT_APP_API_KEY;
-const apiurl=process.env.REACT_APP_URL;
 
 const Spinner = () => <div className="loader "></div>;
 const theme = createTheme({
@@ -70,7 +68,7 @@ const Satuportal_listlist = () => {
   const getSatuportal_listSearch = async () => {
     try {
 
-      const res = await axios.get(apiurl + 'api/open-item/komponen');
+      const res = await api_url_satuadmin.get('api/open-item/komponen');
 
       const data = res.data.resultWithUrls || [];
       //console.log('Failed to fetch data:', error);
@@ -83,7 +81,7 @@ const Satuportal_listlist = () => {
   };
 
   const getSatuportal_listItem = async () => {
-    const response = await axios.get(apiurl + 'api/satupeta/map_item2');
+    const response = await api_url_satuadmin.get('api/satupeta/map_item2');
 
     const data = response.data;
     setsatker(response.data.resultsatker);
@@ -125,21 +123,45 @@ const Satuportal_listlist = () => {
       headerName: "Kategori", 
       flex: 2,  // 30%
       headerClassName: "custom-header", // kelas custom
-      minWidth: 100 
+      minWidth: 100,
+      renderCell: (params) => {
+        const row = params.row;
+        return (
+          <div className="">
+           <p className={` my-1 textsize10`}>{row.kategori}</p>
+          </div>
+        );
+      } 
     },
     { 
       field: "title", 
       headerName: "Judul", 
       flex: 2,  // 30%
       headerClassName: "custom-header", // kelas custom
-      minWidth: 100 
+      minWidth: 100,
+      renderCell: (params) => {
+        const row = params.row;
+        return (
+          <div className="">
+           <p className={` my-1 textsize10`}>{row.title}</p>
+          </div>
+        );
+      } 
     },
     { 
       field: "contents", 
       headerName: "Konten", 
       flex: 3,  // 30%
       headerClassName: "custom-header", // kelas custom
-      minWidth: 100 
+      minWidth: 100,
+      renderCell: (params) => {
+        const row = params.row;
+        return (
+          <div className="">
+           <p className={` my-1 textsize10`}>{row.contents}</p>
+          </div>
+        );
+      } 
     },
     { 
       field: "images", 
@@ -156,9 +178,9 @@ const Satuportal_listlist = () => {
         return (
           <>
           <div style={{ textAlign: "center", width: "100%" }}>
-            {row.presignedUrl_a && (
+            {row.presignedUrl_Tumb_a && (
               <Image
-                src={row.presignedUrl_a}
+                src={row.presignedUrl_Tumb_a}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
               />
@@ -170,9 +192,9 @@ const Satuportal_listlist = () => {
             )}
           </div>
           <div style={{ textAlign: "center", width: "100%",marginTop:"5px" }}>
-            {row.presignedUrl_b && (
+            {row.presignedUrl_Tumb_b && (
               <Image
-                src={row.presignedUrl_b}
+                src={row.presignedUrl_Tumb_b}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
               />
@@ -184,9 +206,9 @@ const Satuportal_listlist = () => {
             )}
           </div>
           <div style={{ textAlign: "center", width: "100%",marginTop:"5px" }}>
-            {row.presignedUrl_c && (
+            {row.presignedUrl_Tumb_c && (
               <Image
-                src={row.presignedUrl_c}
+                src={row.presignedUrl_Tumb_c}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
               />
@@ -218,7 +240,7 @@ const Satuportal_listlist = () => {
           <div style={{ textAlign: "center", width: "100%" }}>
             {row.presignedUrl_1 && (
               <Image
-                src={row.presignedUrl_1}
+                src={row.presignedUrl_Tumb_1}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
               />
@@ -228,7 +250,7 @@ const Satuportal_listlist = () => {
           <div style={{ textAlign: "center", width: "100%",marginTop:"5px" }}>
             {row.presignedUrl_2 && (
               <Image
-                src={row.presignedUrl_2}
+                src={row.presignedUrl_Tumb_2}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
               />
@@ -237,7 +259,7 @@ const Satuportal_listlist = () => {
           <div style={{ textAlign: "center", width: "100%",marginTop:"5px" }}>
             {row.presignedUrl_3 && (
               <Image
-                src={row.presignedUrl_3}
+                src={row.presignedUrl_Tumb_3}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
               />
@@ -264,7 +286,7 @@ const Satuportal_listlist = () => {
             className="flex items-center justify-center mb-[2px]"
           >
             <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-3 rounded-xl flex items-center">
-              <MdEditSquare className="mr-1" />
+              <MdEditSquare className="mr-1" size={18} />
             </button>
           </Link>
         </div>
@@ -291,12 +313,12 @@ const Satuportal_listlist = () => {
 
       <div className="col-span-3 rounded grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-6 drop-shadow-lg">
         <div className="col-span-3">
-          <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-              <MdDashboard className="mt-1 textsize8"/>Dashboard
+          <p className="font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
+            <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex textsize10">
+              <MdDashboard className="mt-1 textsize10"/>Dashboard
             </NavLink> / 
-            <NavLink to="/Komponen" className="text-link-sky mx-2 d-flex">
-              <MdDataset className="mt-1 textsize8" />Komponen Statik
+            <NavLink to="/Komponen" className="text-silver-a mx-2 d-flex textsize10">
+              <MdDataset className="mt-1 textsize10" />Komponen Statik
             </NavLink>
           </p>
         </div>
@@ -308,99 +330,112 @@ const Satuportal_listlist = () => {
       <div className='drop-shadow-lg overflow-xx-auto mb-9 p-2'>
         <section id="teams" className="block   py-3 rad15 shaddow1 bg-white px-2">
           
-          <div className="text-center">
-            <p className="text-sage textsize8 ">Pencarian berdasarkan Judul, Kategori atau Isi Konten.</p>
-            <div className="mb-3">
-              <input
-                type="text"
-                value={searchText}
-                onChange={(e) => handleSearch(e.target.value)}
-                placeholder="Cari data..."
-                className="border p-2 rounded w-64 input-green2"
-              />
-            </div>
-          </div>
+          
           <Container fluid>
-            <Row className='portfoliolist'>
-              <Col sm={12} key={'bodyku'}>
-                <Row>
-                  {loading ? (
-                      <Spinner />
-                  ) : (
-                    <motion.div
-                      initial={{ opacity: 0, y: 50 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                      viewport={{ once: true }}
-                    >
-                      <ThemeProvider theme={theme}>
-                        <DataGrid
-                          rows={rowsFiltered}
-                          columns={columns}
-                          getRowId={(row) => row.id}
-                          disableSelectionOnClick
-                          // Versi MUI baru (v5.17+ atau v6) → pakai ini
-                          pageSizeOptions={[5, 10, 50,100]}
-                          initialState={{
-                            pagination: {
-                              paginationModel: { pageSize: 10, page: 0 }
-                            }
-                          }}
-                          getRowHeight={() => 'auto'} // otomatis menyesuaikan konten
-                          // Styling agar versi lama tetap aman
-                          sx={{
-                            "& .custom-header": {
-                              backgroundColor: "#1886ca",
-                              color: "white",
-                              fontWeight: "bold",
-                              textTransform: "uppercase",
-                              fontSize: "0.9rem"
-                            },
-                            "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon": {
-                              opacity: 1,
-                              visibility: "visible",
-                              width: "auto",
-                              color: "#fff"
-                            },
-                            "& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon": {
-                              opacity: 1
-                            },
-                            "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon button svg": {
-                              fill: "#fff"
-                            },
-                            '& .MuiDataGrid-cell': {
-                              whiteSpace: 'normal', // biar teks wrap
-                              lineHeight: '1.2rem',  // lebih rapat
-                              padding: '8px'
-                            },
-                            "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
-                              display: "none" // sembunyikan opsi default MUI yang tidak diinginkan
-                            },
-                            "& .MuiTablePagination-selectLabel": {
-                              color: "#444",
-                              fontWeight: "bold",
-                              marginTop: "15px"
-                            },
-                            "& .MuiTablePagination-displayedRows": {
-                              color: "#666",
-                              marginTop: "15px"
-                            },
-                            "& .MuiTablePagination-select": {
-                              color: "#000",
-                              fontWeight: "600",
-                              backgroundColor: "#dbdbdb",
-                              borderRadius: "6px"
-                            }
-                          }}
-                        />
-                      </ThemeProvider>
-                   </motion.div>
-                  )}
-                  
+            <Tabs
+              defaultActiveKey="tabel"
+              id="example-tabs"
+              className="mb-3"
+            >
+              <Tab eventKey="tabel" title="Tabel">
+                <div className="text-center">
+                  <p className="text-sage textsize10 ">Pencarian berdasarkan Judul, Kategori atau Isi Konten.</p>
+                  <div className="mb-3 w-100">
+                    <input
+                      type="text"
+                      value={searchText}
+                      onChange={(e) => handleSearch(e.target.value)}
+                      placeholder="Cari data..."
+                      className="border p-2 rounded w-100 input-gray textsize10"
+                    />
+                  </div>
+                </div>              
+                <Row className='portfoliolist'>
+                  <Col sm={12} key={'bodyku'}>
+                    <Row>
+                      {loading ? (
+                          <Spinner />
+                      ) : (
+                        <motion.div
+                          initial={{ opacity: 0, y: 50 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3 }}
+                          viewport={{ once: true }}
+                        >
+                          <ThemeProvider theme={theme}>
+                            <DataGrid
+                              rows={rowsFiltered}
+                              columns={columns}
+                              getRowId={(row) => row.id}
+                              disableSelectionOnClick
+                              // Versi MUI baru (v5.17+ atau v6) → pakai ini
+                              pageSizeOptions={[5, 10, 50,100]}
+                              initialState={{
+                                pagination: {
+                                  paginationModel: { pageSize: 10, page: 0 }
+                                }
+                              }}
+                              getRowHeight={() => 'auto'} // otomatis menyesuaikan konten
+                              // Styling agar versi lama tetap aman
+                              sx={{
+                                "& .custom-header": {
+                                  backgroundColor: "#1886ca",
+                                  color: "white",
+                                  fontWeight: "bold",
+                                  textTransform: "uppercase",
+                                  fontSize: "0.9rem"
+                                },
+                                "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon": {
+                                  opacity: 1,
+                                  visibility: "visible",
+                                  width: "auto",
+                                  color: "#fff"
+                                },
+                                "& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon": {
+                                  opacity: 1
+                                },
+                                "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon button svg": {
+                                  fill: "#fff"
+                                },
+                                '& .MuiDataGrid-cell': {
+                                  whiteSpace: 'normal', // biar teks wrap
+                                  lineHeight: '1.2rem',  // lebih rapat
+                                  padding: '8px'
+                                },
+                                "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
+                                  display: "none" // sembunyikan opsi default MUI yang tidak diinginkan
+                                },
+                                "& .MuiTablePagination-selectLabel": {
+                                  color: "#444",
+                                  fontWeight: "bold",
+                                  marginTop: "15px"
+                                },
+                                "& .MuiTablePagination-displayedRows": {
+                                  color: "#666",
+                                  marginTop: "15px"
+                                },
+                                "& .MuiTablePagination-select": {
+                                  color: "#000",
+                                  fontWeight: "600",
+                                  backgroundColor: "#dbdbdb",
+                                  borderRadius: "6px"
+                                }
+                              }}
+                            />
+                          </ThemeProvider>
+                      </motion.div>
+                      )}
+                      
 
+                    </Row>
+                  </Col>
                 </Row>
-              </Col>
-            </Row>
+              </Tab>
+
+              <Tab eventKey="aktivitas" title="Aktivitas">
+                  <Activity kunci={'Komponen Statik'}/>
+              </Tab>
+            </Tabs>
           </Container>
         </section>
         

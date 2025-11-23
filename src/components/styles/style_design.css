@@ -63,6 +63,18 @@
 .w-rem12{
  width:12rem;
 }
+.w-rem13{
+ width:13rem;
+}
+.w-rem14{
+ width:14rem;
+}
+.w-rem15{
+ width:15rem;
+}
+.w-rem16{
+ width:16rem;
+}
 .w-47{
  width:35vh;
 }
@@ -195,6 +207,7 @@
 .border-rad15{
     border-radius: 15px;
 }
+
 .float-left{
     float: left;
 }
@@ -220,6 +233,9 @@
 .rad15{
     border-radius: 15px;
 }
+.rad50s{
+    border-radius: 50%;
+}
 .rad-bottom15{
     border-radius: 0px 15px;
 }
@@ -237,6 +253,18 @@
 .img-40{
     height:auto;
     width:40px;
+}
+.img-50{
+    height:auto;
+    width:50px;
+}
+.img-60{
+    height:auto;
+    width:60px;
+}
+.img-70{
+    height:auto;
+    width:70px;
 }
 .img-100{
     height:auto;
@@ -360,6 +388,10 @@ filter: progid:DXImageTransform.Microsoft.gradient(
 }
 .h-90v{
     height:90vh;
+}
+
+.h-85v{
+    height:85vh;
 }
 
 .h-5v{
@@ -683,7 +715,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(
 
 .custom-header {
   font-weight: bold;
-  font-size: 0.95rem;
+  font-size: 120%;
   text-align: center;
 }
 .custom-header2 {

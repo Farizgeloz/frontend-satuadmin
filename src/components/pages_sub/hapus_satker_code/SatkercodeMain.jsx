@@ -26,9 +26,10 @@ import { MdDashboard,MdDataset,MdInfoOutline,
 
 import { FaBuildingColumns, FaCodeCommit, FaHospitalUser, FaMoneyBillTrendUp, FaTreeCity } from "react-icons/fa6";
 import { FaBuilding, FaEnvira, FaGraduationCap, FaPeopleArrows, FaUsers } from "react-icons/fa";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
 //const apikey=process.env.REACT_APP_API_KEY;
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 const Spinner = () => <div className="loader "></div>;
 
@@ -66,7 +67,7 @@ const Satkercodelist = () => {
   const getSatkercodeSearch = async () => {
     try {
 
-      const response = await axios.get(apiurl + 'api/open-item/satker_code');
+      const response = await api_url_satuadmin.get('api/open-item/satker_code');
 
       const res = response.data;
       //console.log('Failed to fetch data:', error);
@@ -79,7 +80,7 @@ const Satkercodelist = () => {
   };
 
   const getSatkercodeItem = async () => {
-    const response = await axios.get(apiurl + 'satupeta/map_item2');
+    const response = await api_url_satuadmin.get('satupeta/map_item2');
 
     const data = response.data;
     setsatker(response.data.resultsatker);
@@ -346,12 +347,12 @@ const Satkercodelist = () => {
 
       <div className="col-span-3 rounded grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-6 drop-shadow-lg">
         <div className="col-span-3">
-          <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-              <MdDashboard className="mt-1 textsize8"/>Dashboard
+          <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
+            <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+              <MdDashboard className="mt-1 textsize10"/>Dashboard
             </NavLink> / 
-            <NavLink to="/Data-Satkercode" className="text-link-sky mx-2 d-flex">
-              <MdDataset className="mt-1 textsize8" />Satker Code
+            <NavLink to="/Data-Satkercode" className="text-silver-a mx-2 d-flex">
+              <MdDataset className="mt-1 textsize10" />Satker Code
             </NavLink>
           </p>
         </div>
@@ -369,7 +370,7 @@ const Satkercodelist = () => {
         <section id="teams" className="block   py-3 rad15 shaddow1 bg-white">
           
           <div className="text-center">
-            <p className="text-sage textsize8 ">Pencarian berdasarkan Judul, Kategori Sektoral atau Penghasil Data.</p>
+            <p className="text-sage textsize10 ">Pencarian berdasarkan Judul, Kategori Sektoral atau Penghasil Data.</p>
           </div>
           <Container fluid>
             <Row className='portfoliolist'>
@@ -462,19 +463,19 @@ const Satkercodelist = () => {
         {/*<table className="max-[640px]:table-fixed border-collapse border-slate-400 w-full max-[640px]:w-full  overflow-auto">
           <thead>
             <tr className=" bg-blue-50 text-white w-full">
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Wilayah</th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Komponen</th>
-              <th className="text-center tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6">Kategori Sektoral</th>
-              <th className="text-center tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7">Actions</th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Wilayah</th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Komponen</th>
+              <th className="text-center textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6">Kategori Sektoral</th>
+              <th className="text-center textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7">Actions</th>
             </tr>
           </thead>
           <tbody>
             dataset.map((user,index) => (
               <tr key={user.id} className=" even:bg-blue-50 odd:bg-white border-b-1 w-full">
-                <td className="tsize-90 border-slate-300 tracking-wide p-2 w-1/3">{user.wilayah}</td>
-                <td className="tsize-90 border-slate-300 tracking-wide p-2 w-1/3">{user.satker}</td>
-                <td className="text-center tsize-90 border-slate-300 tracking-wide w-1/6">{user.komponen}</td>
-                <td className="sm:flex justify-center justify-items-center tsize-90 border-slate-300 tracking-wide w-1/7">
+                <td className="textsize10 border-slate-300 tracking-wide p-2 w-1/3">{user.wilayah}</td>
+                <td className="textsize10 border-slate-300 tracking-wide p-2 w-1/3">{user.satker}</td>
+                <td className="text-center textsize10 border-slate-300 tracking-wide w-1/6">{user.komponen}</td>
+                <td className="sm:flex justify-center justify-items-center textsize10 border-slate-300 tracking-wide w-1/7">
                 <UserModalEdit
                       id={user.id}
                       name={user.wilayah}
@@ -494,10 +495,10 @@ const Satkercodelist = () => {
               </tr>
             ))}
             <tr className=" bg-blue-50 text-white w-full h-3">
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6"></th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7"></th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6"></th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7"></th>
             </tr>
           </tbody>
          

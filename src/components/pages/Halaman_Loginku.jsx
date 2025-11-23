@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { api_url_satuadmin } from '../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -10,7 +11,7 @@ const LoginForm = () => {
   const loginUser = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(apiurl + 'loginuser', { email, password });
+      const res = await api_url_satuadmin.post('loginuser', { email, password });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.role);
 

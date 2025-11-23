@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, NavLink } from "react-router-dom";
-import { Container, Row, Col, Button, Spinner, Alert, Form } from 'react-bootstrap';
+import { Container, Row, Col,Tabs, Tab } from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
 import { motion } from "framer-motion";
 import { DataGrid } from "@mui/x-data-grid";
@@ -13,11 +13,13 @@ import NavSub from "../../NavSub";
 import DatasetModalTambah from "./LocationpointModalTambahMulti";
 import DatasetModalTambahFile from "./LocationpointModalTambahFile";
 import Downloadku from "./Locationpoint_Download";
+import Downloaddataku from "./Locationpoint_Download_Data";
 import DatasetModalDelete from "./LocationpointModalDelete";
+import Activity from "../log/Activity";
 
 import { MdDashboard, MdDataset, MdInfoOutline, MdEditSquare } from "react-icons/md";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-const apiurl = process.env.REACT_APP_URL;
 
 // Theme MUI custom label pagination
 const theme = createTheme({
@@ -83,7 +85,7 @@ const Datasetlist = () => {
     try {
       setLoading(true);
       setMessage("");
-      const res = await axios.post(apiurl + "api/satupeta/location_point/addcsv", formData, {
+      const res = await api_url_satuadmin.post("api/satupeta/location_point/addcsv", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -109,14 +111,14 @@ const Datasetlist = () => {
           axios.get(apiurl + 'api/satupeta/map_data/admin')
           //axios.get(apiurl + 'api/opendata/dataset_item')
         ]);*/
-        const searchRes = await axios.get(apiurl + "api/satupeta/map_data/admin");
+        const searchRes = await api_url_satuadmin.get("api/satupeta/map_data/admin");
     
         setDatasetSearch(searchRes.data?.result || []);
         
         
         //setDatasetSifatData(itemRes.data?.resultSifatData || []);
         //setDatasetProdukData(itemRes.data?.resultSatker || []);
-        //setDatasetKategori(itemRes.data?.resultBidangUrusan || []);
+        //setDatasetKategori(itemRes.data?.resultsektor || []);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       } finally {
@@ -162,7 +164,7 @@ const Datasetlist = () => {
     },
     { 
       field: "nama_location_point", 
-      headerName: "Lokasi Point", 
+      headerName: "Titik Lokasi", 
       flex: 3,
       minWidth: 100,
       headerAlign: 'left',
@@ -182,7 +184,7 @@ const Datasetlist = () => {
     { 
       field: "coordinat", 
       headerName: "koordinat", 
-      flex: 3,
+      flex: 2,
       filterable: true,
       headerClassName: "custom-header", // kelas custom
       minWidth: 100,
@@ -216,7 +218,7 @@ const Datasetlist = () => {
      { 
       field: "desa", 
       headerName: "Desa", 
-      flex: 1,
+      flex: 2,
       minWidth: 100,
       headerAlign: 'center',
       headerClassName: "custom-header", // kelas custom
@@ -243,9 +245,9 @@ const Datasetlist = () => {
         <div>
          
           <Tooltip title="Edit dataset" arrow>
-            <Link to={`/Satupeta/LocationPoint/Update/${params.row.id_location_point}`} className="flex items-center justify-center mb-[2px]">
+            <Link to={`/Satupeta/Titik-Lokasi-Peta/Update/${params.row.id_location_point}`} className="flex items-center justify-center mb-[2px]">
               <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-3 rounded-xl flex items-center">
-                <MdEditSquare className="mr-1" />
+                <MdEditSquare className="mr-1" size={18} />
               </button>
             </Link>
           </Tooltip>
@@ -267,116 +269,155 @@ const Datasetlist = () => {
 
   return (
     <div className="bg-slate-100 max-h-screen sm:pt-0 max-[640px]:mt-12">
-      <NavSub title="Satupeta Location Point" />
-      <div className="rounded grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-6 drop-shadow-lg">
-        <div className="col-span-2">
-          <p className="tsize-90 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-              <MdDashboard className="mt-1 textsize8" />Dashboard
-            </NavLink> / 
-            <NavLink to="/Satupeta/LocationPoint" className="text-link-sky mx-2 d-flex">
-              <MdDataset className="mt-1 textsize8" />Location Point
+      <NavSub title="Satupeta Titik Lokasi Peta" />
+      <Row className="rounded g-4 drop-shadow-lg">
+        {/* Breadcrumb */}
+        <Col md={4} xs={12}>
+          <p className="textsize10 font-semibold text-gray-300 d-flex pt-2 mt-2 mx-3 mb-0">
+            <NavLink
+              to="/Dashboard"
+              className="text-silver-a me-2 d-flex textsize10"
+            >
+              <MdDashboard className="mt-1 textsize10" />
+              Dashboard
+            </NavLink>
+            /
+            <NavLink
+              to="/Satupeta/Titik-Lokasi-Peta"
+              className="text-silver-a ms-2 d-flex textsize10"
+            >
+              <MdDataset className="mt-1 textsize10" />
+              Titik Lokasi
             </NavLink>
           </p>
-        </div>
-        
-        <DatasetModalTambah />
+        </Col>
 
-        <DatasetModalTambahFile />
+        {/* DatasetModals */}
+        <Col md={4} xs={12}>
+          <Row className="g-4 drop-shadow-lg">
+            <Col xs={6}>
+              <DatasetModalTambah />
+            </Col>
+            <Col xs={6}>
+              {/* <DatasetModalTambahFile /> */}
+            </Col>
+          </Row>
+        </Col>
 
-        <Downloadku />
-
-        
-        
-      </div>
+        {/* Download Buttons */}
+        {/* <Col md={4} xs={12}>
+          <Row className="g-4 drop-shadow-lg">
+            <Col xs={6}>
+              <Downloaddataku dataku={dataku} />
+            </Col>
+            <Col xs={6}>
+              <Downloadku />
+            </Col>
+          </Row>
+        </Col> */}
+      </Row>
 
       <div className='overflow-xx-auto mb-9 p-2'>
-        <section id="teams" className="block py-3 rad15 shaddow1 bg-white">
-          <div className="text-center">
-            <p className="text-sage textsize8">Pencarian berdasarkan Komponen, Dimensi dan Prioritas Data.</p>
-            <div className="mb-3">
-              <input
-                type="text"
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                placeholder="Cari data..."
-                className="border p-2 rounded w-64 input-green2"
-              />
-            </div>
-          </div>
+        <section id="teams" className="block   py-3 rad15 shaddow1 bg-white px-2">
+          
           <Container fluid>
-            <Row className='portfoliolist'>
-              <Col sm={12}>
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  viewport={{ once: true }}
-                >
-                  <ThemeProvider theme={theme}>
-                    <DataGrid
-                      loading={loading}
-                      rows={filteredRows}
-                      columns={columns}
-                      pageSizeOptions={[5, 10, 50, 100]}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { pageSize: 10, page: 0 }
-                        }
-                      }}
-                    
-                      disableSelectionOnClick
-                      getRowHeight={() => 'auto'}
-                      
-                      sx={{
-                        "& .custom-header": {
-                          backgroundColor: "#1886ca",
-                          color: "white",
-                          fontWeight: "bold",
-                          textTransform: "uppercase",
-                          fontSize: "80%"
-                        },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon": {
-                          opacity: 1,
-                          visibility: "visible",
-                          width: "auto",
-                          color: "#fff"
-                        },
-                        "& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon": {
-                          opacity: 1
-                        },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon button svg": {
-                          fill: "#fff"
-                        },
-                        '& .MuiDataGrid-cell': {
-                          whiteSpace: 'normal', // biar teks wrap
-                          lineHeight: '1.2rem',  // lebih rapat
-                          padding: '8px'
-                        },
-                        "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
-                          display: "none" // sembunyikan opsi default MUI yang tidak diinginkan
-                        },
-                        "& .MuiTablePagination-selectLabel": {
-                          color: "#444",
-                          fontWeight: "bold",
-                          marginTop: "15px"
-                        },
-                        "& .MuiTablePagination-displayedRows": {
-                          color: "#666",
-                          marginTop: "15px"
-                        },
-                        "& .MuiTablePagination-select": {
-                          color: "#000",
-                          fontWeight: "600",
-                          backgroundColor: "#dbdbdb",
-                          borderRadius: "6px"
-                        }
-                      }}
+            <Tabs
+              defaultActiveKey="tabel"
+              id="example-tabs"
+              className="mb-3"
+            >
+              <Tab eventKey="tabel" title="Tabel">
+                <div className="text-center">
+                  <p className="text-sage textsize10">Pencarian berdasarkan Lokasi, Titik Lokasi Kecamatan,dan Desa.</p>
+                  <div className="mb-3 w-100">
+                    <input
+                      type="text"
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      placeholder="Cari data..."
+                      className="border p-2 rounded w-100 input-gray textsize10"
                     />
-                  </ThemeProvider>
-                </motion.div>
-              </Col>
-            </Row>
+                  </div>
+                </div>  
+                <Row className='portfoliolist'>
+                  <Col sm={12}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      viewport={{ once: true }}
+                    >
+                      <ThemeProvider theme={theme}>
+                        <DataGrid
+                          loading={loading}
+                          rows={filteredRows}
+                          columns={columns}
+                          pageSizeOptions={[5, 10, 50, 100]}
+                          initialState={{
+                            pagination: {
+                              paginationModel: { pageSize: 10, page: 0 }
+                            }
+                          }}
+                        
+                          disableSelectionOnClick
+                          getRowHeight={() => 'auto'}
+                          
+                          sx={{
+                            "& .custom-header": {
+                              backgroundColor: "#1886ca",
+                              color: "white",
+                              fontWeight: "bold",
+                              textTransform: "uppercase",
+                              fontSize: "100%"
+                            },
+                            "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon": {
+                              opacity: 1,
+                              visibility: "visible",
+                              width: "auto",
+                              color: "#fff"
+                            },
+                            "& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon": {
+                              opacity: 1
+                            },
+                            "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon button svg": {
+                              fill: "#fff"
+                            },
+                            '& .MuiDataGrid-cell': {
+                              whiteSpace: 'normal', // biar teks wrap
+                              lineHeight: '1.2rem',  // lebih rapat
+                              padding: '8px'
+                            },
+                            "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
+                              display: "none" // sembunyikan opsi default MUI yang tidak diinginkan
+                            },
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#444",
+                              fontWeight: "bold",
+                              marginTop: "15px"
+                            },
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#666",
+                              marginTop: "15px"
+                            },
+                            "& .MuiTablePagination-select": {
+                              color: "#000",
+                              fontWeight: "600",
+                              backgroundColor: "#dbdbdb",
+                              borderRadius: "6px"
+                            }
+                          }}
+                        />
+                      </ThemeProvider>
+                    </motion.div>
+                  </Col>
+                </Row>  
+              </Tab>
+
+              <Tab eventKey="aktivitas" title="Aktivitas">
+                  <Activity kunci={'Satu Peta Titik Lokasi'}/>
+              </Tab>
+            </Tabs>
+            
           </Container>
         </section>
       </div>

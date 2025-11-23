@@ -17,18 +17,20 @@ import Swal from 'sweetalert2';
 import { IoAdd, IoTrash } from "react-icons/io5";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-const apiurl=process.env.REACT_APP_URL;
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const userloginadmin = userlogin.id || '';
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -58,6 +60,7 @@ function ModalTambahMulti() {
   const [kecamatan, setkecamatan] = useState(null);
   const [lokasi, setlokasi] = useState(null);
   const [desa, setdesa] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [locations, setLocations] = useState([
     { nama_location_point: "", coordinatlon: "", coordinatlat: "", location_id: "", kecamatan_id: "", desa_id: "" }
@@ -96,12 +99,31 @@ function ModalTambahMulti() {
     console.log("Payload locations:", payloadLocations);
 
     try {
-      await axios.post(apiurl + "api/satupeta/location_point/addmulti", 
-        { locations: payloadLocations },
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses update data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.post("api/satupeta/location_point/addmulti", 
+        { 
+          locations: payloadLocations,
+          admin : userloginadmin,
+          jenis: "Satu Peta Titik Lokasi",
+          komponen: "Tambah Titik Lokasi Satu Peta" 
+
+         
+        },
         { headers: { "Content-Type": "application/json" } }
       );
 
       setShow(false);
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
     } catch (error) {
       console.error(error);
@@ -131,7 +153,7 @@ function ModalTambahMulti() {
   const handleShow = () => setShow(true);
 
   const getDatasetItem = async () => {
-    const response = await axios.get(apiurl + 'api/satupeta/map_data/admin');
+    const response = await api_url_satuadmin.get('api/satupeta/map_data/admin');
 
     const data = response.data;
     setlocationku(response.data.resultlocation);
@@ -140,7 +162,7 @@ function ModalTambahMulti() {
   };
 
   const getDatasetItem2 = async () => {
-    const response = await axios.get(apiurl + "api/satupeta/map_data/admin", {
+    const response = await api_url_satuadmin.get("api/satupeta/map_data/admin", {
       params: { search_kecamatan: kecamatan ? kecamatan.value : "" }
     });
     const data = response.data;
@@ -299,7 +321,7 @@ function ModalTambahMulti() {
         >
             <form onSubmit={saveDataset}>
             <Modal.Header closeButton className="border-b ">
-                <h4 className="text-sky-600 flex"><MdAddCircle  className="tsize-90 text-sky-600 mt-1"  />Tambah Lokasi Point</h4>
+                <h4 className="text-sky-600 flex"><MdAddCircle  className="textsize10 text-sky-600 mt-1"  />Tambah Lokasi Point</h4>
                 
             </Modal.Header>
             <Modal.Body className="mt-2 bg-silver-light p-0">
@@ -520,7 +542,7 @@ function ModalTambahMulti() {
                       <button 
                           type="button"
                           onClick={handleNext}
-                          className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                          className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                           <MdOutlineSave  className='mt-1 mx-1'  /><span>Lanjut</span>
                       </button>
                       
@@ -557,7 +579,7 @@ function ModalTambahMulti() {
                     <div className="-mt-5 w-full h-2 bg-cyan-200">
                         <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                     </div>
-                    <div className="mt-12 text-base  text-center">
+                    <div className="mt-12 textsize10  text-center">
                         Yakin Data Sudah Benar ?
                     </div>
                     <div>
@@ -565,12 +587,12 @@ function ModalTambahMulti() {
                           <button 
                               type="button"
                               onClick={prevStep}
-                              className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                              className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                               <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                           </button>
                           <button 
                               type="submit"
-                              className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                              className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                               <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                           </button>
                         </div>

@@ -28,18 +28,20 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-const apiurl=process.env.REACT_APP_URL;
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const userloginadmin = userlogin.id || '';
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -70,6 +72,7 @@ function ModalTambahUser() {
   const [visibilitas, setvisibilitas] = useState("");
   const [file, setfile] = useState("");
   const [file2, setfile2] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   
 
@@ -100,11 +103,26 @@ function ModalTambahUser() {
     formData.append("title",title);
     formData.append("linked",linked);
     formData.append("visibilitas",visibilitas.value);
+    formData.append("admin",userloginadmin);
+    formData.append("jenis","Open Data Iklan");
+    formData.append("komponen","Tambah Iklan Open Data");
 
     try {
-      await axios.post(apiurl + 'api/open-item/opendata-iklan/add', formData);
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses tambah data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.post('api/open-item/opendata-iklan/add', formData);
 
       setShow(false);
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
     } catch (error) {
       sweeterror(error.response?.data?.msg || "Gagal menambah data2");
@@ -211,7 +229,7 @@ function ModalTambahUser() {
         >
             <form onSubmit={saveIklan}>
             <Modal.Header closeButton className="border-b ">
-                <h4 className="text-sky-600 flex"><MdAddCircle  className="tsize-90 text-sky-600 mt-1"  />Tambah Opendata Iklan</h4>
+                <h4 className="text-sky-600 flex"><MdAddCircle  className="textsize10 text-sky-600 mt-1"  />Tambah Opendata Iklan</h4>
                 
             </Modal.Header>
             <Modal.Body className="mt-2 bg-silver-light p-0">
@@ -329,7 +347,7 @@ function ModalTambahUser() {
                             <div className="mt-0">
                               <TextField
                                 type="file"
-                                label="Unggah Gambar"
+                                label="Unggah Gambar Konten"
                                 className="bg-input rad15 w-100"
                                 alt=""
                                 InputLabelProps={{
@@ -377,7 +395,7 @@ function ModalTambahUser() {
                             onClick={() => {
                               handle_step1();
                             }}  
-                            className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                            className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                               <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                           </button>
                         </div>
@@ -392,7 +410,7 @@ function ModalTambahUser() {
                           transition={{ duration: 0.3 }}
                           className="md:w-3/5 mx-auto py-12">
                           
-                          <div className="mt-12 text-base  text-center">
+                          <div className="mt-12 textsize10  text-center">
                               Yakin Data Sudah Benar ?
                           </div>
                           <div>
@@ -400,12 +418,12 @@ function ModalTambahUser() {
                                   <button 
                                       type="button"
                                       onClick={prevStep}
-                                      className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                      className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                       <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                   </button>
                                   <button 
                                       type="submit"
-                                      className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                      className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                       <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                   </button>
                               </div>

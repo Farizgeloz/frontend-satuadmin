@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { api_url_satuadmin } from "../../api/axiosConfig";
 
 // Kirim cookie session ke server
 axios.defaults.withCredentials = true;
@@ -32,7 +33,7 @@ export const LoginUser = createAsyncThunk("auth/LoginUser", async (user, thunkAP
 // CEK USER DARI SESSION
 export const getMe = createAsyncThunk("auth/getMe", async (_, thunkAPI) => {
   try {
-    const response = await axios.get("http://localhost:5000/me");
+    const response = await api_url_satuadmin.get("http://localhost:5000/me");
     return response.data;
   } catch (error) {
     const message = error?.response?.data?.msg || "Tidak terautentikasi";

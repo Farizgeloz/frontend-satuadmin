@@ -25,14 +25,14 @@ const DownloadTemplateDropdown = () => {
 
   const downloadTemplateCSV = () => {
     const csvContent = [
-      ["nama_location","bidang_urusan","opd"]
+      ["koleksi_data","title","satker_id","sektor_id","location_id","tahun_rilis","tipe","pengukuran","periode","deskripsi","images","visibilitas"]
     ].map(e => e.join(",")).join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "template_locations.csv";
+    a.download = "template_map_location_maplist.csv";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -40,23 +40,24 @@ const DownloadTemplateDropdown = () => {
   const downloadTemplateExcel = async () => {
     const XLSX = await import("xlsx");
     const worksheet = XLSX.utils.aoa_to_sheet([
-      ["nama_location","bidang_urusan","opd"]
+      ["koleksi_data","title","satker_id","sektor_id","location_id","tahun_rilis","tipe","pengukuran","periode","deskripsi","images","visibilitas"]
+     
     ]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
-    XLSX.writeFile(workbook, "template_locations.xlsx");
+    XLSX.writeFile(workbook, "template_map_location_maplist.xlsx");
   };
 
   return (
-    <div className="col-span-1 max-[640px]:col-span-2 mt-0 " style={{zIndex:"999"}}>
-        <Dropdown data-bs-theme="dark" className='m-2' style={{zIndex:"999"}}>
+    <div className="col-span-3 max-[640px]:col-span-2 mt-0 " style={{zIndex:"999"}}>
+        <Dropdown data-bs-theme="dark" className='m-2 ' style={{zIndex:"999"}}>
             <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
-                Download
+                Download Tema
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
                 <Dropdown.Item href="#/action-1" >
-                <NavLink onClick={downloadTemplateExcel} className="text-link-white">Download xlsx</NavLink>
+                <NavLink onClick={downloadTemplateExcel} className="text-white-a px-3">Download xlsx</NavLink>
                 </Dropdown.Item>
                 <Dropdown.Item href="#/action-2">
                <Dropdown.Item as="button" onClick={downloadTemplateCSV}>

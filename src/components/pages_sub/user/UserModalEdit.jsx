@@ -13,8 +13,12 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2';
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-
+const rolelogin = localStorage.getItem('role');
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const useropdlogin = userlogin.opd_id || '';
+const userloginadmin = userlogin.id || '';
 
 function UserModalEdit(props) {
     const id = useState(props.id);
@@ -38,7 +42,7 @@ function UserModalEdit(props) {
     }, []);
 
     const getUserById = async () => {
-        const response = await axios.get(`http://localhost:5000/users/${id}`);
+        const response = await api_url_satuadmin.get(`http://localhost:5000/users/${id}`);
         setName(response.data.name);
         setEmail(response.data.email);
         setGender(response.data.gender);
@@ -47,7 +51,7 @@ function UserModalEdit(props) {
       useEffect(() => {
         /*const getUserById = async () => {
           try {
-            const response = await axios.get(`http://localhost:5000/users2/${id}`);
+            const response = await api_url_satuadmin.get(`http://localhost:5000/users2/${id}`);
             setName(response.data.name);
             setEmail(response.data.email);
             setRole(response.data.role);
@@ -65,7 +69,7 @@ function UserModalEdit(props) {
     const updateUser = async (e) => {
         e.preventDefault();
         try {
-          await axios.patch(`http://localhost:5000/backend_users/${id}`, {
+          await api_url_satuadmin.patch(`backend_users/${id}`, {
             name: name,
             nick: nick,
             email: email,
@@ -143,7 +147,7 @@ function UserModalEdit(props) {
             >
                 <form onSubmit={updateUser}>
                 <Modal.Header closeButton className="border-b ">
-                    <h4 className="text-sky-600 flex"><IoCreateSharp  className="tsize-90 text-sky-600 mt-1"  />Edit Data User {id}</h4>
+                    <h4 className="text-sky-600 flex"><IoCreateSharp  className="textsize10 text-sky-600 mt-1"  />Edit Data User {id}</h4>
                     
                 </Modal.Header>
                 <Modal.Body>
@@ -159,7 +163,7 @@ function UserModalEdit(props) {
                                     onChange={(e) => setName(e.target.value)}
                                     type="text"
                                     autoComplete="nama"
-                                    className="input-gray tsize-90"
+                                    className="input-gray textsize10"
                                     />
                                 </div>
                             </div>
@@ -173,7 +177,7 @@ function UserModalEdit(props) {
                                     onChange={(e) => setNick(e.target.value)}
                                     type="text"
                                     autoComplete="nick"
-                                    className="input-gray tsize-90"
+                                    className="input-gray textsize10"
                                     />
                                 </div>
                             </div>
@@ -188,7 +192,7 @@ function UserModalEdit(props) {
                                     onChange={(e) => setEmail(e.target.value)}
                                     type="text"
                                     autoComplete="email"
-                                    className="input-gray tsize-90"
+                                    className="input-gray textsize10"
                                     />
                                 </div>
                             </div>
@@ -201,7 +205,7 @@ function UserModalEdit(props) {
                                     <select
                                     onChange={(e) => setRole(e.target.value)}
                                     autoComplete="role"
-                                    className="input-gray tsize-90"
+                                    className="input-gray textsize10"
                                     >
                                         <option value={role}>{role}</option>
                                         <option value="Super Admin">Super Admin</option>
@@ -221,7 +225,7 @@ function UserModalEdit(props) {
                                     onChange={(e) => setPassword(e.target.value)}
                                     type="password"
                                     placeholder="******"
-                                    className="input-gray tsize-90"
+                                    className="input-gray textsize10"
                                     />
                                 </div>
                             </div>
@@ -235,7 +239,7 @@ function UserModalEdit(props) {
                                     onChange={(e) => setConfPassword(e.target.value)}
                                     type="password"
                                     placeholder="******"
-                                    className="input-gray tsize-90"
+                                    className="input-gray textsize10"
                                     />
                                 </div>
                             </div>

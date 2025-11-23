@@ -20,24 +20,24 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import "../../../App.css";
 import Swal from 'sweetalert2';
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
 
 
 
-const apiurl=process.env.REACT_APP_URL;
+
 const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
-const userloginsatker = userlogin.satker_id || '';
 const userloginadmin = userlogin.id || '';
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -60,12 +60,12 @@ const textFieldStyle = (theme) => ({
 const textFieldStyleMultiline = (theme) => ({
   "& .MuiOutlinedInput-root": {
     height: "auto",
-    fontSize: "0.9rem",
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -106,6 +106,7 @@ function ModalTambahUser() {
   const [images_a, setimages_a] = useState("");
   const [images_b, setimages_b] = useState("");
   const [images_c, setimages_c] = useState("");
+  const [loading, setLoading] = useState(false);
 
   
 
@@ -129,7 +130,7 @@ function ModalTambahUser() {
     const image = e.target.files[0];
     setfile_c(image);
     if (image) {
-      setimages_a(URL.createObjectURL(image)); // buat URL sementara
+      setimages_c(URL.createObjectURL(image)); // buat URL sementara
     } else {
     }
   }
@@ -162,12 +163,26 @@ function ModalTambahUser() {
     formData.append("sumber",sumber);
     formData.append("download_file",file_download);
     formData.append("visibilitas",visibilitas.value);
-    formData.append("admin",String(userloginadmin));
+    formData.append("admin",userloginadmin);
+    formData.append("jenis","Satu Peta Artikel");
+    formData.append("komponen","Tambah Artikel Satu Peta");
 
     try {
-      await axios.post(apiurl + 'api/satupeta/map_berita/add', formData);
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses tambah data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.post('api/satupeta/map_artikel/add', formData);
 
       setShow(false);
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
     } catch (error) {
       sweeterror(error.response?.data?.msg || "Gagal menambah data2");
@@ -248,7 +263,7 @@ function ModalTambahUser() {
     let newErrors = {};
 
     if (!content_a) {
-      newErrors.content_a = "Konten wajib diisi";
+      newErrors.content_a = "Isi Konten wajib diisi";
     }
     if (!file_a) {
       newErrors.file_a = "Upload wajib Ada";
@@ -299,7 +314,7 @@ function ModalTambahUser() {
       >
           <form onSubmit={saveIklan}>
           <Modal.Header closeButton className="border-b ">
-              <h4 className="text-sky-600 flex"><MdAddCircle  className="tsize-90 text-sky-600 mt-1"  />Tambah Satu Portal Berita</h4>
+              <h4 className="text-sky-600 flex"><MdAddCircle  className="textsize10 text-sky-600 mt-1"  />Tambah Satu Portal Artikel</h4>
               
           </Modal.Header>
           <Modal.Body className="mt-2 bg-silver-light p-0">
@@ -348,7 +363,7 @@ function ModalTambahUser() {
                       <div className="sm:col-span-6 -mt-4">
                         <div className="mt-0">
                             <TextField
-                              label="Judul Berita"
+                              label="Judul Artikel"
                               className="bg-input rad15 w-full"
                               value={title}
                               onChange={(e) => settitle(e.target.value)}
@@ -417,7 +432,7 @@ function ModalTambahUser() {
                         onClick={() => {
                           handleNext();
                         }}  
-                        className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                        className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                           <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                       </button>
                     </div>
@@ -464,7 +479,7 @@ function ModalTambahUser() {
                       <div className="sm:col-span-6 -mt-4">
                         <div className="mt-0">
                           <TextField
-                            label="Konten a"
+                            label="Isi Konten"
                             className="bg-input rad15 w-full"
                             value={content_a}
                             onChange={(e) => setcontent_a(e.target.value)}
@@ -497,7 +512,7 @@ function ModalTambahUser() {
                         <div className="mt-0">
                           <TextField
                             type="file"
-                            label="Unggah Gambar"
+                            label="Unggah Gambar Konten"
                             className="bg-input rad15 w-100"
                             InputLabelProps={{
                               shrink: true, // biar label tetap tampil di atas saat file dipilih
@@ -537,7 +552,7 @@ function ModalTambahUser() {
                       <div className="sm:col-span-6 -mt-4">
                         <div className="mt-0">
                           <TextField
-                            label="Konten b"
+                            label="Isi Konten"
                             className="bg-input rad15 w-full"
                             value={content_b}
                             onChange={(e) => setcontent_b(e.target.value)}
@@ -569,7 +584,7 @@ function ModalTambahUser() {
                         <div className="mt-0">
                           <TextField
                             type="file"
-                            label="Unggah Gambar"
+                            label="Unggah Gambar Konten"
                             className="bg-input rad15 w-100"
                             InputLabelProps={{
                               shrink: true, // biar label tetap tampil di atas saat file dipilih
@@ -609,7 +624,7 @@ function ModalTambahUser() {
                       <div className="sm:col-span-6 -mt-4">
                         <div className="mt-0">
                           <TextField
-                            label="Konten c"
+                            label="Isi Konten"
                             className="bg-input rad15 w-full"
                             value={content_c}
                             onChange={(e) => setcontent_c(e.target.value)}
@@ -641,7 +656,7 @@ function ModalTambahUser() {
                         <div className="mt-0">
                           <TextField
                             type="file"
-                            label="Unggah Gambar"
+                            label="Unggah Gambar Konten"
                             className="bg-input rad15 w-100"
                             InputLabelProps={{
                               shrink: true, // biar label tetap tampil di atas saat file dipilih
@@ -719,14 +734,14 @@ function ModalTambahUser() {
                         onClick={() => {
                           prevStep();
                         }}  
-                        className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                        className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                           <span>Kembali</span><MdOutlineArrowCircleLeft  className='mt-1 mx-1'  />
                       </button>      
                       <button type="button"
                         onClick={() => {
                           handleNext2();
                         }}  
-                        className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                        className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                           <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                       </button>
                     </div>
@@ -769,7 +784,7 @@ function ModalTambahUser() {
                         <div className="-mt-5 w-full h-2 bg-cyan-200">
                             <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                         </div>
-                        <div className="mt-12 text-base  text-center">
+                        <div className="mt-12 textsize10  text-center">
                             Yakin Data Sudah Benar ?
                         </div>
                         <div>
@@ -777,12 +792,12 @@ function ModalTambahUser() {
                                 <button 
                                     type="button"
                                     onClick={prevStep}
-                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                     <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                 </button>
                                 <button 
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                    className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                     <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                 </button>
                             </div>

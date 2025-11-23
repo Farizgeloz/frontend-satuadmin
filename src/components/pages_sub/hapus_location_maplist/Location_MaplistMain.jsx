@@ -26,9 +26,10 @@ import { MdDashboard,MdDataset,MdInfoOutline,
 
 import { FaBuildingColumns, FaCodeCommit, FaHospitalUser, FaMoneyBillTrendUp, FaTreeCity } from "react-icons/fa6";
 import { FaBuilding, FaEnvira, FaGraduationCap, FaPeopleArrows, FaUsers } from "react-icons/fa";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
 //const apikey=process.env.REACT_APP_API_KEY;
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 const Spinner = () => <div className="loader "></div>;
 
@@ -65,7 +66,7 @@ const Location_Maplistlist = () => {
   const getLocation_MaplistSearch = async () => {
     try {
 
-      const response = await axios.get(apiurl + 'satupeta/map_list');
+      const response = await api_url_satuadmin.get('satupeta/map_list');
 
       const res = response.data;
       setdata(res.data);
@@ -76,7 +77,7 @@ const Location_Maplistlist = () => {
   };
 
   const getLocation_MaplistItem = async () => {
-    const response = await axios.get(apiurl + 'satupeta/map_item2');
+    const response = await api_url_satuadmin.get('satupeta/map_item2');
 
     const data = response.data;
     setsatker(response.data.resultsatker);
@@ -383,12 +384,12 @@ const Location_Maplistlist = () => {
 
       <div className="col-span-3 rounded grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-6 drop-shadow-lg">
         <div className="col-span-3">
-          <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-              <MdDashboard className="mt-1 textsize8"/>Dashboard
+          <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
+            <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+              <MdDashboard className="mt-1 textsize10"/>Dashboard
             </NavLink> / 
-            <NavLink to="/Data-Location_Maplist" className="text-link-sky mx-2 d-flex">
-              <MdDataset className="mt-1 textsize8" />Location Maplist
+            <NavLink to="/Data-Location_Maplist" className="text-silver-a mx-2 d-flex">
+              <MdDataset className="mt-1 textsize10" />Location Maplist
             </NavLink>
           </p>
         </div>
@@ -422,7 +423,7 @@ const Location_Maplistlist = () => {
                           value={wilayah}
                           onChange={(e) => setwilayah(e.target.value)}
                           autoComplete="wilayah"
-                          className="input-gray tsize-90"
+                          className="input-gray textsize10"
                           >
                           <option value="">Pilih Wilayah</option>
                           <option value="Kabupaten">Kabupaten</option>
@@ -442,7 +443,7 @@ const Location_Maplistlist = () => {
                         onChange={(e) => setsatker(e.target.value)}
                         type="text"
                         autoComplete="satker"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize10"
                         />
                     </div>
                   </div>
@@ -457,7 +458,7 @@ const Location_Maplistlist = () => {
                         onChange={(e) => setsifat_data(e.target.value)}
                         type="text"
                         autoComplete="sifat_data"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize10"
                         />
                     </div>
                   </div>
@@ -472,7 +473,7 @@ const Location_Maplistlist = () => {
                         onChange={(e) => setfrekuensi(e.target.value)}
                         type="text"
                         autoComplete="frekuensi"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize10"
                         />
                     </div>
                   </div>
@@ -490,7 +491,7 @@ const Location_Maplistlist = () => {
                         onChange={(e) => setkonsep(e.target.value)}
                         type="text"
                         autoComplete="konsep"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize10"
                         />
                     </div>
                   </div>
@@ -507,7 +508,7 @@ const Location_Maplistlist = () => {
                         onChange={(e) => setukuran(e.target.value)}
                         type="text"
                         autoComplete="ukuran"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize10"
                         />
                     </div>
                   </div>
@@ -522,7 +523,7 @@ const Location_Maplistlist = () => {
                         onChange={(e) => setsatuan(e.target.value)}
                         type="text"
                         autoComplete="satuan"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize10"
                         />
                     </div>
                   </div>
@@ -537,7 +538,7 @@ const Location_Maplistlist = () => {
                         onChange={(e) => settag(e.target.value)}
                         type="text"
                         autoComplete="tag"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize10"
                         />
                     </div>
                   </div>
@@ -552,7 +553,7 @@ const Location_Maplistlist = () => {
                         onChange={(e) => setupdatedAt(e.target.value)}
                         type="date"
                         autoComplete="updatedAt"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize10"
                         />
                     </div>
                   </div>
@@ -560,7 +561,7 @@ const Location_Maplistlist = () => {
 
                   <div className="sm:col-span-3">
                     <div className="mt-2 col-md:flex">
-                      <button type="submit" className="col-span-3 openModalBtn bg-green-600 hover:bg-green-700 m-1 tsize-90">Cari Data</button>
+                      <button type="submit" className="col-span-3 openModalBtn bg-green-600 hover:bg-green-700 m-1 textsize10">Cari Data</button>
                       
                     </div>
                   </div>
@@ -580,7 +581,7 @@ const Location_Maplistlist = () => {
         <section id="teams" className="block   py-3 rad15 shaddow1 bg-white">
           
           <div className="text-center">
-            <p className="text-sage textsize8 ">Pencarian berdasarkan Judul, Kategori Sektoral atau Penghasil Data.</p>
+            <p className="text-sage textsize10 ">Pencarian berdasarkan Judul, Kategori Sektoral atau Penghasil Data.</p>
           </div>
           <Container fluid>
             <Row className='portfoliolist'>
@@ -673,19 +674,19 @@ const Location_Maplistlist = () => {
         {/*<table className="max-[640px]:table-fixed border-collapse border-slate-400 w-full max-[640px]:w-full  overflow-auto">
           <thead>
             <tr className=" bg-blue-50 text-white w-full">
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Wilayah</th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Komponen</th>
-              <th className="text-center tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6">Kategori Sektoral</th>
-              <th className="text-center tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7">Actions</th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Wilayah</th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Komponen</th>
+              <th className="text-center textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6">Kategori Sektoral</th>
+              <th className="text-center textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7">Actions</th>
             </tr>
           </thead>
           <tbody>
             dataset.map((user,index) => (
               <tr key={user.id} className=" even:bg-blue-50 odd:bg-white border-b-1 w-full">
-                <td className="tsize-90 border-slate-300 tracking-wide p-2 w-1/3">{user.wilayah}</td>
-                <td className="tsize-90 border-slate-300 tracking-wide p-2 w-1/3">{user.satker}</td>
-                <td className="text-center tsize-90 border-slate-300 tracking-wide w-1/6">{user.komponen}</td>
-                <td className="sm:flex justify-center justify-items-center tsize-90 border-slate-300 tracking-wide w-1/7">
+                <td className="textsize10 border-slate-300 tracking-wide p-2 w-1/3">{user.wilayah}</td>
+                <td className="textsize10 border-slate-300 tracking-wide p-2 w-1/3">{user.satker}</td>
+                <td className="text-center textsize10 border-slate-300 tracking-wide w-1/6">{user.komponen}</td>
+                <td className="sm:flex justify-center justify-items-center textsize10 border-slate-300 tracking-wide w-1/7">
                 <UserModalEdit
                       id={user.id}
                       name={user.wilayah}
@@ -705,10 +706,10 @@ const Location_Maplistlist = () => {
               </tr>
             ))}
             <tr className=" bg-blue-50 text-white w-full h-3">
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6"></th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7"></th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6"></th>
+              <th className="textsize10 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7"></th>
             </tr>
           </tbody>
          

@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Modal.css";
-import "../../App.css";
+import "../../styles/App.css";
 import { 
     IoCreateSharp,
     IoAddCircleOutline,
@@ -16,7 +16,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2';
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 function ModalPendudukEdit(props) {
     const id = useState(props.id);
@@ -61,7 +61,7 @@ function ModalPendudukEdit(props) {
       }, []);
      
       const getKabupaten = async () => {
-        const response = await axios.get(
+        const response = await api_url_satuadmin.get(
           apiurl+`get_kabupaten`
         );
         setKabupatenku(response.data.result);
@@ -70,7 +70,7 @@ function ModalPendudukEdit(props) {
      
     
       const getKecamatan = async () => {
-        const response = await axios.get(
+        const response = await api_url_satuadmin.get(
           apiurl+`get_kecamatan`
         );
         setKecamatanku(response.data.result);
@@ -79,7 +79,7 @@ function ModalPendudukEdit(props) {
      
     
       const getdesa = async () => {
-        const response = await axios.get(
+        const response = await api_url_satuadmin.get(
           apiurl+`get_desa`
         );
         setDesaku(response.data.result);
@@ -172,7 +172,7 @@ function ModalPendudukEdit(props) {
                 keyboard={false}>
             <form onSubmit={updatePenduduk}>
                 <Modal.Header closeButton className="border-b ">
-                    <h4 className="text-sky-600 flex"><IoAddCircleOutline  className="tsize-90 text-sky-600 mt-1"  />Tambah Data Penduduk</h4>
+                    <h4 className="text-sky-600 flex"><IoAddCircleOutline  className="textsize12 text-sky-600 mt-1"  />Tambah Data Penduduk</h4>
                     
                 </Modal.Header>
                 <Modal.Body className="mt-2">
@@ -188,7 +188,7 @@ function ModalPendudukEdit(props) {
                             onChange={(e) => setName(e.target.value)}
                             type="text"
                             autoComplete="nama"
-                            className="input-gray tsize-90"
+                            className="input-gray textsize12"
                             />
                         </div>
                     </div>
@@ -203,7 +203,7 @@ function ModalPendudukEdit(props) {
                             onChange={(e) => setNik(e.target.value)}
                             type="number"
                             autoComplete="nik"
-                            className="input-gray tsize-90"
+                            className="input-gray textsize12"
                             />
                         </div>
                     </div>
@@ -221,7 +221,7 @@ function ModalPendudukEdit(props) {
                             onChange={(e) => setTgl_Lahir(e.target.value)}
                             type="date"
                             autoComplete="tgl_lahir"
-                            className="input-gray tsize-90"
+                            className="input-gray textsize12"
                             />
                         </div>
                     </div>
@@ -236,7 +236,7 @@ function ModalPendudukEdit(props) {
                             onChange={(e) => setTempat_Lahir(e.target.value)}
                             type="text"
                             autoComplete="tempat_lahir"
-                            className="input-gray tsize-90"
+                            className="input-gray textsize12"
                             />
                         </div>
                     </div>
@@ -246,7 +246,7 @@ function ModalPendudukEdit(props) {
                       </label>
                       <div className="mt-2">
                           <input
-                            className="input-gray tsize-90"
+                            className="input-gray textsize12"
                             placeholder="Kabupaten"
                             onFocus={() => setIsFocusKabupaten(true)}
                             onBlur={() => {
@@ -298,7 +298,7 @@ function ModalPendudukEdit(props) {
                       </label>
                       <div className="mt-2">
                           <input
-                            className="input-gray tsize-90"
+                            className="input-gray textsize12"
                             placeholder="Kecamatan"
                             onFocus={() => setIsFocusKecamatan(true)}
                             onBlur={() => {
@@ -350,7 +350,7 @@ function ModalPendudukEdit(props) {
                       </label>
                       <div className="mt-2">
                           <input
-                            className="input-gray tsize-90"
+                            className="input-gray textsize12"
                             placeholder="Desa"
                             onFocus={() => setIsFocusDesa(true)}
                             onBlur={() => {
@@ -406,7 +406,7 @@ function ModalPendudukEdit(props) {
                               value={jk}
                               onChange={(e) => setJk(e.target.value)}
                               autoComplete="role"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               >
                               <option value={jk}>{jk}</option>
                               <option value="L">L</option>
@@ -424,7 +424,7 @@ function ModalPendudukEdit(props) {
                               value={status_kawin}
                               onChange={(e) => setStatusKawin(e.target.value)}
                               autoComplete="role"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               >
                               <option value={status_kawin}>{status_kawin}</option>
                               <option value="Belum Kawin">Belum Kawin</option>
@@ -444,7 +444,7 @@ function ModalPendudukEdit(props) {
                               value={agama}
                               onChange={(e) => setAgama(e.target.value)}
                               autoComplete="role"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               >
                               <option value={agama}>{agama}</option>
                               <option value="Islam">Islam</option>
@@ -467,7 +467,7 @@ function ModalPendudukEdit(props) {
                               value={pendidikan}
                               onChange={(e) => setPedidikan(e.target.value)}
                               autoComplete="role"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               >
                               <option value={pendidikan}>{pendidikan}</option>
                               <option value="SD">SD</option>
@@ -490,7 +490,7 @@ function ModalPendudukEdit(props) {
                               value={kepala_keluarga}
                               onChange={(e) => setKepalaKeluarga(e.target.value)}
                               autoComplete="role"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               >
                               <option value={kepala_keluarga}>{kepala_keluarga}</option>
                               <option value="Anggota">Anggota</option>

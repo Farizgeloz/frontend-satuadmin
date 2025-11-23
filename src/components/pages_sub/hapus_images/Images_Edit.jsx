@@ -35,8 +35,9 @@ import { MdDashboard,MdDataset,MdOutlineErrorOutline,
 
 
 import _ from "lodash";
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 
 
@@ -82,7 +83,7 @@ function ImagesPengelolah() {
  
 
   const getDataById = async () => {
-    const response = await axios.get(apiurl+`api/open-item/images_detail/${id}`);
+    const response = await api_url_satuadmin.get(apiurl+`api/open-item/images_detail/${id}`);
     setid(response.data.id);
     setkategori(response.data.kategori);
     settitle(response.data.title);
@@ -105,7 +106,7 @@ function ImagesPengelolah() {
     formData.append("contents",contents);
     
     try {
-      await axios.patch(`${apiurl}api/open-item/images_update/${idku}`, formData, {
+      await api_url_satuadmin.patch(`api/open-item/images_update/${idku}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -192,15 +193,15 @@ function ImagesPengelolah() {
     <div className="bg-gray-100  h-95    overflow-auto z-5 max-[640px]:mt-10">
       <NavSub  title="Images Edit" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Data-Images" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Images
+          <NavLink to="/Data-Images" className="text-silver-a mx-2 d-flex">
+            <MdDataset className="mt-1 textsize10" />Images
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdEditSquare className="mt-1 textsize8" />Edit
+          <NavLink  className="text-silver-a mx-2 d-flex">
+            <MdEditSquare className="mt-1 textsize10" />Edit
           </NavLink>
         </p>
       </div>
@@ -353,7 +354,7 @@ function ImagesPengelolah() {
                             onClick={() => {
                               handle_step1();
                             }}  
-                            className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                            className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                               <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                           </button>
                         </div>
@@ -368,7 +369,7 @@ function ImagesPengelolah() {
                         transition={{ duration: 0.3 }}
                         className="md:w-3/5 mx-auto py-12">
                         
-                        <div className="mt-12 text-base  text-center">
+                        <div className="mt-12 textsize10  text-center">
                             Yakin Data Sudah Benar ?
                         </div>
                         <div>
@@ -376,12 +377,12 @@ function ImagesPengelolah() {
                                 <button 
                                     type="button"
                                     onClick={prevStep}
-                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                     <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                 </button>
                                 <button 
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                    className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                     <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                 </button>
                             </div>

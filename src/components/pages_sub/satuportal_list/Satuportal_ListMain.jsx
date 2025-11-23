@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, NavLink } from "react-router-dom";
-import ReactPaginate from "react-paginate";
-import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory,{ PaginationProvider, SizePerPageDropdownStandalone } from 'react-bootstrap-table2-paginator';
-import filterFactory, { textFilter,selectFilter, Comparator } from 'react-bootstrap-table2-filter';
-import ToolkitProvider, {  CSVExport,Search } from 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min';
-import {Container,Row,Col} from 'react-bootstrap';
+import {Container,Row,Col,Tabs, Tab} from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
 import { motion } from "framer-motion";
 import { DataGrid } from "@mui/x-data-grid";
@@ -21,6 +16,7 @@ import NavSub from "../../NavSub";
 import AccordionCard from '../../accordion/AccordionCard';
 import Satuportal_listModalTambah from "./Satuportal_ListModalTambah";
 import Satuportal_listModalDelete from "./Satuportal_ListModalDelete";
+import Activity from "../log/Activity";
 
 
 import { MdDashboard,MdDataset,MdInfoOutline,
@@ -28,9 +24,9 @@ import { MdDashboard,MdDataset,MdInfoOutline,
 
 import { FaBuildingColumns, FaCodeCommit, FaHospitalUser, FaMoneyBillTrendUp, FaTreeCity } from "react-icons/fa6";
 import { FaBuilding, FaEnvira, FaGraduationCap, FaPeopleArrows, FaUsers } from "react-icons/fa";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-//const apikey=process.env.REACT_APP_API_KEY;
-const apiurl=process.env.REACT_APP_URL;
+//const apikey=process.env.REACT_APP_API_KEY
 
 const Spinner = () => <div className="loader "></div>;
 const theme = createTheme({
@@ -72,7 +68,7 @@ const Satuportal_listlist = () => {
   const getSatuportal_listSearch = async () => {
     try {
 
-      const response = await axios.get(apiurl + 'api/open-item/ekosistem_list');
+      const response = await api_url_satuadmin.get('api/open-item/ekosistem_list');
 
       const res = response.data;
       //console.log('Failed to fetch data:', error);
@@ -118,21 +114,51 @@ const Satuportal_listlist = () => {
       headerName: "Kategori", 
       flex: 2,  // 30%
       headerClassName: "custom-header", // kelas custom
-      minWidth: 100 
+      minWidth: 100,
+      renderCell: (params) => {
+        const row = params.row;
+        return (
+          <>
+            <p className="textsize10">
+              {row.kategori}
+            </p>
+          </>
+        );
+      } 
     },
     { 
       field: "title", 
       headerName: "Judul", 
       flex: 2,  // 30%
       headerClassName: "custom-header", // kelas custom
-      minWidth: 100 
+      minWidth: 100,
+      renderCell: (params) => {
+        const row = params.row;
+        return (
+          <>
+            <p className="textsize10">
+              {row.title}
+            </p>
+          </>
+        );
+      }
     },
     { 
       field: "contents", 
       headerName: "Konten", 
       flex: 3,  // 30%
       headerClassName: "custom-header", // kelas custom
-      minWidth: 100 
+      minWidth: 100,
+      renderCell: (params) => {
+        const row = params.row;
+        return (
+          <>
+            <p className="textsize10">
+              {row.contents}
+            </p>
+          </>
+        );
+      }
     },
     { 
       field: "images", 
@@ -154,6 +180,7 @@ const Satuportal_listlist = () => {
                 src={row.presignedUrl_a}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
+                loading="lazy"
               />
             )}
             {row.title_images_a && (
@@ -168,6 +195,7 @@ const Satuportal_listlist = () => {
                 src={row.presignedUrl_b}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
+                loading="lazy"
               />
             )}
             {row.title_images_b && (
@@ -182,6 +210,7 @@ const Satuportal_listlist = () => {
                 src={row.presignedUrl_c}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
+                loading="lazy"
               />
             )}
             {row.title_images_c && (
@@ -214,6 +243,7 @@ const Satuportal_listlist = () => {
                 src={row.presignedUrl_1}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
+                loading="lazy"
               />
             )}
            
@@ -224,6 +254,7 @@ const Satuportal_listlist = () => {
                 src={row.presignedUrl_2}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
+                loading="lazy"
               />
             )}
           </div>
@@ -233,6 +264,7 @@ const Satuportal_listlist = () => {
                 src={row.presignedUrl_3}
                 className="rad15 px-3"
                 style={{ maxWidth: 100, objectFit: "contain" }}
+                loading="lazy"
               />
             )}
           </div>
@@ -257,7 +289,7 @@ const Satuportal_listlist = () => {
             className="flex items-center justify-center mb-[2px]"
           >
             <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-3 rounded-xl flex items-center">
-              <MdEditSquare className="mr-1" />
+              <MdEditSquare className="mr-1"  size={18}/>
             </button>
           </Link>
           <Satuportal_listModalDelete id={params.row.id} name={params.row.title} />
@@ -281,18 +313,18 @@ const Satuportal_listlist = () => {
 
       <div className="col-span-3 rounded grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-6 drop-shadow-lg">
         <div className="col-span-3">
-          <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-              <MdDashboard className="mt-1 textsize8"/>Dashboard
+          <p className="font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
+            <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex textsize10">
+              <MdDashboard className="mt-1 textsize10"/>Dashboard
             </NavLink> / 
-            <NavLink to="/Satuportal-List" className="text-link-sky mx-2 d-flex">
-              <MdDataset className="mt-1 textsize8" />Satu Portal List
+            <NavLink to="/Satuportal-List" className="text-silver-a mr-2 d-flex textsize10">
+              <MdDataset className="mt-1 textsize10" />Satu Portal List
             </NavLink>
           </p>
         </div>
         
         
-        <div className="md:col-span-2 margin-0 px-10 mt-2">
+        <div className="md:col-span-3 margin-0 px-10 mt-2">
           <Satuportal_listModalTambah/>
         
         </div>
@@ -304,90 +336,127 @@ const Satuportal_listlist = () => {
         <section id="teams" className="block   py-3 rad15 shaddow1 bg-white px-2">
           
           <div className="text-center">
-            <p className="text-sage textsize8 ">Pencarian berdasarkan Judul, Kategori dan Isi Konten.</p>
-            <div className="mb-3">
+            <p className="text-sage textsize10 ">Pencarian berdasarkan Judul, Kategori dan Isi Konten.</p>
+            <div className="mb-3 w-100">
               <input
                 type="text"
                 value={searchText}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Cari data..."
-                className="border p-2 rounded w-64 input-green2"
+                className="border p-2 rounded w-100 input-gray textsize10"
               />
             </div>
           </div>
           <Container fluid>
-            <Row className='portfoliolist'>
-              <Col sm={12}>
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  viewport={{ once: true }}
-                >
-                  <ThemeProvider theme={theme}>
-                    <DataGrid
-                      loading={loading}
-                      rows={filteredRows}
-                      columns={columns}
-                      pageSizeOptions={[5, 10, 50, 100]}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { pageSize: 10, page: 0 }
-                        }
-                      }}
-                    
-                      disableSelectionOnClick
-                      getRowHeight={() => 'auto'}
-                      
-                      sx={{
-                        "& .custom-header": {
-                          backgroundColor: "#1886ca",
-                          color: "white",
-                          fontWeight: "bold",
-                          textTransform: "uppercase",
-                          fontSize: "80%"
-                        },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon": {
-                          opacity: 1,
-                          visibility: "visible",
-                          width: "auto",
-                          color: "#fff"
-                        },
-                        "& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon": {
-                          opacity: 1
-                        },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon button svg": {
-                          fill: "#fff"
-                        },
-                        '& .MuiDataGrid-cell': {
-                          whiteSpace: 'normal', // biar teks wrap
-                          lineHeight: '1.2rem',  // lebih rapat
-                          padding: '8px'
-                        },
-                        "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
-                          display: "none" // sembunyikan opsi default MUI yang tidak diinginkan
-                        },
-                        "& .MuiTablePagination-selectLabel": {
-                          color: "#444",
-                          fontWeight: "bold",
-                          marginTop: "15px"
-                        },
-                        "& .MuiTablePagination-displayedRows": {
-                          color: "#666",
-                          marginTop: "15px"
-                        },
-                        "& .MuiTablePagination-select": {
-                          color: "#000",
-                          fontWeight: "600",
-                          backgroundColor: "#dbdbdb",
-                          borderRadius: "6px"
-                        }
-                      }}
-                    />
-                  </ThemeProvider>
-                </motion.div>
-              </Col>
-            </Row>
+            <Tabs
+              defaultActiveKey="home"
+              id="example-tabs"
+              className="mb-3"
+            >
+              <Tab eventKey="home" title="Tabel">
+                <Row className='portfoliolist'>
+                  <Col sm={12}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      viewport={{ once: true }}
+                    >
+                      <ThemeProvider theme={theme}>
+                        <DataGrid
+                          loading={loading}
+                          rows={filteredRows}
+                          columns={columns}
+                          pageSizeOptions={[5, 10, 50, 100]}
+                          initialState={{
+                            pagination: {
+                              paginationModel: { pageSize: 10, page: 0 }
+                            }
+                          }}
+                        
+                          disableSelectionOnClick
+                          getRowHeight={() => 'auto'}
+                          
+                          sx={{
+                            "--DataGrid-color-background-base": "transparent",
+                              backgroundColor: "transparent !important", // paksa transparan table
+                              border: "none", // hilangkan border utama,
+                              marginBottom:"50px",
+                            "& .MuiDataGrid-root": {
+                              backgroundColor: "transparent", // ⬅ background utama transparan
+                              marginBottom:"50px"
+                            },
+                            "& .MuiDataGrid-row": {
+                              marginTop: "8px",
+                              paddingTop:"10px",
+                              paddingBottom:"10px",
+                              paddingLeft:"5px",
+                              paddingRight:"5px",
+                              backgroundColor: "rgba(255, 255, 255, 0.9)", // bisa dihapus kalau mau full transparan
+                              borderRadius: "6px",
+                              boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)"
+                              
+                            },
+                            "& .custom-header": {
+                              backgroundColor: "#1886ca",
+                              color: "white",
+                              fontWeight: "bold",
+                              textTransform: "uppercase",
+                              fontSize: "120%"
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              overflow: "auto !important" // ⬅ hilangkan scroll
+                            },
+                            "& .MuiDataGrid-cell": {
+                              backgroundColor: "transparent", // ⬅ background cell transparan
+                              borderTop:"none"
+                            },
+                            "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
+                              display: "none"
+                            },
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#444",
+                              fontWeight: "bold",
+                              marginTop: "15px"
+                            },
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#666",
+                              marginTop: "15px"
+                            },
+                            "& .MuiTablePagination-select": {
+                              color: "#000",
+                              fontWeight: "600",
+                              backgroundColor: "#dbdbdb",
+                              borderRadius: "6px"
+                            },
+                            // style kalau tidak ada data
+                            "& .MuiDataGrid-overlay": {
+                              backgroundColor: "#fff", // transparan
+                              height: "100px",
+                              fontSize: "18px",
+                              fontWeight: "bold",
+                              fontStyle:"italic",
+                              color: "#888",
+                              marginTop: "-10%",
+                              paddingTop: "40px",
+                              textTransform: "uppercase",
+                              borderRadius: "6px",
+                            },
+                          }}
+                        />
+                      </ThemeProvider>
+                    </motion.div>
+                  </Col>
+                </Row>
+              </Tab>
+
+              <Tab eventKey="profile" title="Aktivitas">
+                  <Activity kunci={'Satu Portal List'}/>
+              </Tab>
+
+             
+            </Tabs>
+            
           </Container>
         </section>
       </div>

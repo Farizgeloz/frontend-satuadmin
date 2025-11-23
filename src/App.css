@@ -352,7 +352,7 @@
 }
 .input-gray{
   @apply w-full py-2 mt-1 border-2 border-gray-400 bg-gray-100 rounded-lg px-3 focus:ring-offset-2 focus:outline-double focus:outline-lime-500 focus:border-lime-500 focus:border-2 focus:bg-lime-100 hover:shadow;
-  height: 2.5em;
+
 }
 
 .input-gray2{

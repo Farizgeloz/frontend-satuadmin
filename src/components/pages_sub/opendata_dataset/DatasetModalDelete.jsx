@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 import Tooltip from "@mui/material/Tooltip";
 
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 
 

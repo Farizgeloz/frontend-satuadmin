@@ -163,7 +163,7 @@
     appearance: none;
     text-decoration: none;
     line-height: 1.2;
-    font-size: .9375rem;
+    font-size: 90%;
     letter-spacing: .43px;
     font-weight: 500;
     border-radius: 6px;
@@ -187,4 +187,29 @@
     to {
         background-position: 0 50%
     }
+}
+
+
+.btn-white-a{
+  color:#ffffff;
+  text-decoration:none;
+  border-radius: 5px;
+  padding: 0px 5px;
+
+}
+.btn-white-a:hover{
+  background-color: #ffffff96;
+  color:#000000;
+}
+
+.btn-silver-a{
+  color:#373737;
+  text-decoration:none;
+  border-radius: 5px;
+  padding: 0px 5px;
+
+}
+.btn-silver-a:hover{
+  background-color: #ffffff96;
+  color:#000000;
 }

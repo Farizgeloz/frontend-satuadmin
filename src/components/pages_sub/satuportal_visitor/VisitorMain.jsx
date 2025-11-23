@@ -9,8 +9,10 @@ import NavSub from "../../NavSub";
 import IklanModalDelete from "./VisitorModalDelete";
 import { IoTrash } from "react-icons/io5";
 import { Col, Container, Row } from "react-bootstrap";
+import Swal from 'sweetalert2';
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-const apiurl = process.env.REACT_APP_URL;
+const apiurl =  import.meta.env.VITE_API_URL;;
 
 const Spinner = () => <div className="loader"></div>;
 
@@ -39,7 +41,7 @@ export default function Iklanlist() {
   }, []);
 
   const getIklanSearch = async () => {
-    const res = await axios.get(`${apiurl}api/open-item/ekosistem-visitor`);
+    const res = await api_url_satuadmin.get(`api/open-item/ekosistem-visitor`);
     const data = res.data.data2 || [];
     setDataku(data);
     setRowsFiltered(data);
@@ -48,19 +50,6 @@ export default function Iklanlist() {
     setSelectAll(false);
   };
 
-  const handleSearch = (value) => {
-    setSearchText(value);
-    if (value === "") {
-      setRowsFiltered(dataku);
-    } else {
-      const filtered = dataku.filter(
-        (item) =>
-          item.title?.toLowerCase().includes(value.toLowerCase()) ||
-          item.content_a?.toLowerCase().includes(value.toLowerCase())
-      );
-      setRowsFiltered(filtered);
-    }
-  };
 
   // Toggle individual selection
   const toggleSelectId = (id) => {
@@ -88,20 +77,54 @@ export default function Iklanlist() {
   };
 
   const handleDeleteMultiple = async () => {
-    if (selectedIds.length === 0) return alert("Pilih data dulu!");
-    if (window.confirm(`Yakin ingin menghapus ${selectedIds.length} data?`)) {
+    if (selectedIds.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Tidak ada data terpilih',
+        text: 'Silakan pilih data yang ingin dihapus.',
+      });
+      return;
+    }
+
+    const confirm = await Swal.fire({
+      title: `Hapus ${selectedIds.length} data?`,
+      text: "Data yang dihapus tidak bisa dikembalikan!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal'
+    });
+
+    if (confirm.isConfirmed) {
       try {
-        await axios.post(`${apiurl}api/open-item/ekosistem-visitor/delete`, {
+        await axios.post(`api/open-item/ekosistem-visitor/delete`, {
           ids: selectedIds,
         });
-        await getIklanSearch();
+
+        await getIklanSearch(); // refresh data
         setSelectedIds([]);
         setSelectAll(false);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil',
+          text: 'Data berhasil dihapus.',
+          timer: 1500,
+          showConfirmButton: false
+        });
       } catch (error) {
         console.error("Gagal hapus multiple:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: 'Terjadi kesalahan saat menghapus data.',
+        });
       }
     }
   };
+
 
   const columns = [
     {
@@ -164,11 +187,11 @@ export default function Iklanlist() {
       <div className="col-span-3 grid grid-cols-1 md:grid-cols-6 gap-4">
         <div className="col-span-3">
           <p className="font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 flex">
+            <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex textsize10">
               <MdDashboard className="mt-1" /> Dashboard
             </NavLink>{" "}
             /{" "}
-            <NavLink to="#" className="text-link-sky mx-2 flex">
+            <NavLink to="#" className="text-silver-a mr-2 d-flex textsize10">
               <MdDataset className="mt-1" /> Satuportal Visitor
             </NavLink>
           </p>
@@ -184,6 +207,22 @@ export default function Iklanlist() {
 
           <Container fluid>
             <Row className='portfoliolist'>
+              <div style={{ marginBottom: '10px' }}>
+                <button 
+                  onClick={handleDeleteMultiple} 
+                  disabled={selectedIds.length === 0}
+                  style={{
+                    backgroundColor: selectedIds.length === 0 ? '#ccc' : '#e53935',
+                    color: 'white',
+                    border: 'none',
+                    padding: '8px 12px',
+                    borderRadius: '4px',
+                    cursor: selectedIds.length === 0 ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  Hapus Terpilih ({selectedIds.length})
+                </button>
+              </div>
               <Col sm={12}>
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
@@ -207,32 +246,42 @@ export default function Iklanlist() {
                       getRowHeight={() => 'auto'}
                       
                       sx={{
+                        "--DataGrid-color-background-base": "transparent",
+                          backgroundColor: "transparent !important", // paksa transparan table
+                          border: "none", // hilangkan border utama,
+                          marginBottom:"50px",
+                        "& .MuiDataGrid-root": {
+                          backgroundColor: "transparent", // ⬅ background utama transparan
+                          marginBottom:"50px"
+                        },
+                        "& .MuiDataGrid-row": {
+                          marginTop: "8px",
+                          paddingTop:"10px",
+                          paddingBottom:"10px",
+                          paddingLeft:"5px",
+                          paddingRight:"5px",
+                          backgroundColor: "rgba(255, 255, 255, 0.9)", // bisa dihapus kalau mau full transparan
+                          borderRadius: "6px",
+                          boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
+                          fontSize: "100%"
+                          
+                        },
                         "& .custom-header": {
                           backgroundColor: "#1886ca",
                           color: "white",
                           fontWeight: "bold",
                           textTransform: "uppercase",
-                          fontSize: "80%"
+                          fontSize: "120%"
                         },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon": {
-                          opacity: 1,
-                          visibility: "visible",
-                          width: "auto",
-                          color: "#fff"
+                        "& .MuiDataGrid-virtualScroller": {
+                          overflow: "auto !important" // ⬅ hilangkan scroll
                         },
-                        "& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon": {
-                          opacity: 1
-                        },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon button svg": {
-                          fill: "#fff"
-                        },
-                        '& .MuiDataGrid-cell': {
-                          whiteSpace: 'normal', // biar teks wrap
-                          lineHeight: '1.2rem',  // lebih rapat
-                          padding: '8px'
+                        "& .MuiDataGrid-cell": {
+                          backgroundColor: "transparent", // ⬅ background cell transparan
+                          borderTop:"none"
                         },
                         "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
-                          display: "none" // sembunyikan opsi default MUI yang tidak diinginkan
+                          display: "none"
                         },
                         "& .MuiTablePagination-selectLabel": {
                           color: "#444",
@@ -248,7 +297,20 @@ export default function Iklanlist() {
                           fontWeight: "600",
                           backgroundColor: "#dbdbdb",
                           borderRadius: "6px"
-                        }
+                        },
+                        // style kalau tidak ada data
+                        "& .MuiDataGrid-overlay": {
+                          backgroundColor: "#fff", // transparan
+                          height: "100px",
+                          fontSize: "18px",
+                          fontWeight: "bold",
+                          fontStyle:"italic",
+                          color: "#888",
+                          marginTop: "-10%",
+                          paddingTop: "40px",
+                          textTransform: "uppercase",
+                          borderRadius: "6px",
+                        },
                       }}
                     />
                   </ThemeProvider>

@@ -5,7 +5,7 @@ import axios from "axios";
 import exporting from 'highcharts/modules/exporting';
 
 //exporting(Highcharts);
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 function Pendidikan_ChartColumn() {
 
@@ -17,7 +17,7 @@ function Pendidikan_ChartColumn() {
   }, []);
 
   const getPenduduk = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`backend_dashboard`
     );
     setRowsPendidikan(response.data.totalrowspenduduk_pendidikan);

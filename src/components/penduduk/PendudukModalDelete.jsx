@@ -2,7 +2,7 @@ import React, { useState} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Modal.css";
-import "../../App.css";
+import "../../styles/App.css";
 
 import { FaPlus } from "react-icons/fa"
 import { IoTrash } from "react-icons/io5";
@@ -11,7 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2';
 
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 
 

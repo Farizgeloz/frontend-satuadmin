@@ -28,7 +28,6 @@ import { FaBuildingColumns, FaCodeCommit, FaHospitalUser, FaMoneyBillTrendUp, Fa
 import { FaBuilding, FaEnvira, FaGraduationCap, FaPeopleArrows, FaUsers } from "react-icons/fa";
 
 //const apikey=process.env.REACT_APP_API_KEY;
-const apiurl=process.env.REACT_APP_URL;
 
 const Spinner = () => <div className="loader "></div>;
 
@@ -91,8 +90,8 @@ const Biolist = () => {
   };
 
   const getData = async () => {
-    const response = await axios.get(
-      `${apiurl}api/open-item/ekosistem_bio`
+    const response = await url.get(
+      `api/open-item/ekosistem_bio`
     );
     //console.log(response.data.resultsearch);
     setBioSearch(response.data);
@@ -298,12 +297,12 @@ const options = {
 
       <div className="col-span-3 rounded grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-6 drop-shadow-lg">
         <div className="col-span-3">
-          <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-              <MdDashboard className="mt-1 textsize8"/>Dashboard
+          <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
+            <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+              <MdDashboard className="mt-1 textsize10"/>Dashboard
             </NavLink> / 
-            <NavLink to="/Data-Bio" className="text-link-sky mx-2 d-flex">
-              <MdDataset className="mt-1 textsize8" />Bio
+            <NavLink to="/Data-Bio" className="text-silver-a mx-2 d-flex">
+              <MdDataset className="mt-1 textsize10" />Bio
             </NavLink>
           </p>
         </div>
@@ -318,7 +317,7 @@ const options = {
         <section id="teams" className="block   py-3 rad15 shaddow1 bg-white">
           
           <div className="text-center">
-            <p className="text-sage textsize8 ">Pencarian berdasarkan Judul, Kategori Sektoral atau Penghasil Data.</p>
+            <p className="text-sage textsize10 ">Pencarian berdasarkan Judul, Kategori Sektoral atau Penghasil Data.</p>
           </div>
           <Container fluid>
             <Row className='portfoliolist'>

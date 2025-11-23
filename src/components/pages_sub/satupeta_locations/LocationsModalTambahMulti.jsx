@@ -14,21 +14,21 @@ import Modal from 'react-bootstrap/Modal';
 import "../../../App.css";
 import Swal from 'sweetalert2';
 import { IoAdd, IoTrash } from "react-icons/io5";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-const apiurl=process.env.REACT_APP_URL;
 const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
 const userloginsatker = userlogin.satker_id || '';
 const userloginadmin = userlogin.id || '';
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -49,9 +49,9 @@ const textFieldStyle = (theme) => ({
 });
 
 function ModalTambahMulti() {
-  const [bidangurusanku, setbidangurusanku] = useState([""]);
+  const [sektorku, setsektorku] = useState([""]);
   const [satkerku, setsatkerku] = useState([""]);
-  
+  const [loading, setLoading] = useState(false);  
 
   const [locations, setLocations] = useState([
     { nama_location: "", satker_id: "", bidang_urusan_id: "" }
@@ -82,18 +82,35 @@ function ModalTambahMulti() {
     const payloadLocations = locations.map((loc) => ({
         nama_location: loc.nama_location.toString(),
         satker_id: loc.satker_id.value.toString(),
-        bidang_urusan_id: loc.bidang_urusan_id.value.toString()         // <-- pastikan string
+        sektor_id: loc.sektor_id.value.toString()         // <-- pastikan string
     }));
 
     console.log("Payload locations:", payloadLocations);
 
     try {
-      await axios.post(apiurl + "api/satupeta/locations/addmulti", 
-        { locations: payloadLocations,admin : String(userloginadmin) },
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses tambah data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.post("api/satupeta/locations/addmulti", 
+        { 
+          locations: payloadLocations,
+          admin : String(userloginadmin),
+          jenis: "Satu Peta Lokasi",
+          komponen: "Delete Lokasi Satu Peta" 
+        },
         { headers: { "Content-Type": "application/json" } }
       );
 
       setShow(false);
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
     } catch (error) {
       console.error(error);
@@ -117,11 +134,11 @@ function ModalTambahMulti() {
   const handleShow = () => setShow(true);
 
   const getDatasetItem = async () => {
-    const response = await axios.get(apiurl + "api/satupeta/map_item2", {
+    const response = await api_url_satuadmin.get("api/satupeta/map_item2", {
       params: { search_satker:userloginsatker }
     });
     const data = response.data;
-    setbidangurusanku(response.data.resultbidangurusan);
+    setsektorku(response.data.resultsektor);
     setsatkerku(response.data.resultsatker);
   };
 
@@ -216,7 +233,7 @@ function ModalTambahMulti() {
         >
             <form onSubmit={saveDataset}>
             <Modal.Header closeButton className="border-b ">
-                <h4 className="text-sky-600 flex"><MdAddCircle  className="tsize-90 text-sky-600 mt-1"  />Tambah Lokasi Point</h4>
+                <h4 className="text-sky-600 flex"><MdAddCircle  className="textsize10 text-sky-600 mt-1"  />Tambah Lokasi</h4>
                 
             </Modal.Header>
             <Modal.Body className="mt-2 bg-silver-light p-0">
@@ -248,13 +265,13 @@ function ModalTambahMulti() {
                                         className='tsize-110 w-full'
                                         isOptionEqualToValue={(option, value) => option?.value === value?.value}
                                         id="combo-box-bidang_urusan_id"
-                                        options={bidangurusanku.map((row) => ({
-                                        label: row.nama_bidang_urusan,
-                                        value: row.id_bidang_urusan
+                                        options={sektorku.map((row) => ({
+                                        label: row.nama_sektor,
+                                        value: row.id_sektor
                                         }))}
                                         getOptionLabel={(option) => option.label || ""}
-                                        value={loc.bidang_urusan_id}
-                                        onChange={(event, newValue) => handleChange(index, "bidang_urusan_id",newValue)}
+                                        value={loc.sektor_id}
+                                        onChange={(event, newValue) => handleChange(index, "sektor_id",newValue)}
                                         
                                         clearOnEscape
                                         disableClearable
@@ -341,7 +358,7 @@ function ModalTambahMulti() {
                     
                     <button 
                         type="submit"
-                        className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                        className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                         <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan Semua Baris</span>
                     </button>
                 </div>
@@ -547,7 +564,7 @@ function ModalTambahMulti() {
                                   onClick={() => {
                                     handle_step();
                                   }}
-                                  className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                  className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                   <span>Lanjut</span><MdArrowCircleRight  className='mt-1 mx-1'  />
                               </button>
                                 
@@ -585,7 +602,7 @@ function ModalTambahMulti() {
                             <div className="-mt-5 w-full h-2 bg-cyan-200">
                                 <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                             </div>
-                            <div className="mt-12 text-base  text-center">
+                            <div className="mt-12 textsize10  text-center">
                                 Yakin Data Sudah Benar ?
                             </div>
                             <div>
@@ -593,12 +610,12 @@ function ModalTambahMulti() {
                                   <button 
                                       type="button"
                                       onClick={prevStep}
-                                      className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                      className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                       <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                   </button>
                                   <button 
                                       type="submit"
-                                      className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                      className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                       <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                   </button>
                                 </div>

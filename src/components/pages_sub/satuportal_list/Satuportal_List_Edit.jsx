@@ -37,18 +37,20 @@ import { MdDashboard,MdDataset,MdOutlineErrorOutline,
 import useFetch from './useFeach';
 
 import _ from "lodash";
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const userloginadmin = userlogin.id || '';
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -71,12 +73,12 @@ const textFieldStyle = (theme) => ({
 const textFieldStyleMultiline = (theme) => ({
   "& .MuiOutlinedInput-root": {
     height: "auto",
-    fontSize: "0.9rem",
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -120,6 +122,8 @@ function Satuportal_listPengelolah() {
   const [file_images_b, setfile_images_b] = useState("");
   const [file_images_c, setfile_images_c] = useState("");
   const [fileError, setFileError] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
 
   const loadImage_Logo_a = (e) => {
@@ -298,7 +302,7 @@ function Satuportal_listPengelolah() {
 
 
   const getDataById = async () => {
-    const response = await axios.get(apiurl+`api/open-item/ekosistem_list_detail/${id}`);
+    const response = await api_url_satuadmin.get(`api/open-item/ekosistem_list_detail/${id}`);
     setid(response.data.id);
     settitle(response.data.title);
     setcontents(response.data.contents);
@@ -328,12 +332,27 @@ function Satuportal_listPengelolah() {
     formData.append("title_images_b",title_images_b);
     formData.append("title_images_c",title_images_c);
     formData.append("linked",linked);
+    formData.append("admin",userloginadmin);
+    formData.append("jenis","Satu Portal List");
+    formData.append("komponen","Update Data List Satu Portal");
     try {
-      await axios.patch(`${apiurl}api/open-item/komponen_update/${idku}`, formData, {
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses update data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.patch(`api/open-item/komponen_update/${idku}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
      
     } catch (error) {
@@ -345,40 +364,34 @@ function Satuportal_listPengelolah() {
       
     
 
-  function sweetsuccess(){
+  function sweetsuccess() {
     Swal.fire({
-        title: "Sukses",
-        html: "Data Berhasil Disimpan",
-        timer: 2000,
-        icon: "success",
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-          
-        },
-        willClose: () => {
-              //navigate(`/Data-Satuportal_list/Detail/${id}`);
-              navigate(`/Satuportal/List`);
-        }
-      }).then((result) => {
-      });
+      title: "Sukses",
+      html: "Data Berhasil Disimpan",
+      timer: 2000,
+      icon: "success",
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      willClose: () => {
+        navigate(`/Satuportal/List`);
+      },
+    });
   }
-  function sweeterror(error){
-      Swal.fire({
-          title: "Gagal",
-          html: error,
-          timer: 1500,
-          icon: "error",
-          timerProgressBar: true,
-          didOpen: () => {
-            Swal.showLoading();
-            
-          },
-          willClose: () => {
-          }
-        }).then((result) => {
-        });
-  };
+
+  function sweeterror(error) {
+    Swal.fire({
+      title: "Gagal",
+      html: error,
+      timer: 1500,
+      icon: "error",
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+  }
 
   const [step, setStep] = useState(1);
   const nextStep = () => {
@@ -437,15 +450,15 @@ function Satuportal_listPengelolah() {
     <div className="bg-gray-100  h-95    overflow-auto z-5 max-[640px]:mt-10">
       <NavSub  title="Satu Portal List Edit" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex textsize10">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Satuportal/List" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Satu Portal List
+          <NavLink to="/Satuportal/List" className="text-silver-a mr-2 d-flex textsize10">
+            <MdDataset className="mt-1 textsize10" />Satu Portal List
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdEditSquare className="mt-1 textsize8" />Edit
+          <NavLink  className="text-silver-a mr-2 d-flex textsize10">
+            <MdEditSquare className="mt-1 textsize10" />Edit
           </NavLink>
         </p>
       </div>
@@ -608,7 +621,7 @@ function Satuportal_listPengelolah() {
                                 onClick={() => {
                                   handle_step1();
                                 }}
-                                className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <span>Lanjut</span><MdArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                               
@@ -781,7 +794,7 @@ function Satuportal_listPengelolah() {
                             <div className="sm:col-span-3 -mt-2">
                               <div className="mt-0">
                                 <TextField
-                                  label="SubList 1"
+                                  label="Sub List Konten"
                                   className="bg-input rad15 w-full"
                                   value={title_images_a}
                                   onChange={(e) => settitle_image_a(e.target.value)}
@@ -813,7 +826,7 @@ function Satuportal_listPengelolah() {
                               <div className="mt-0">
                                 <TextField
                                   type="file"
-                                  label="Unggah Gambar 1"
+                                  label="Unggah Gambar Konten"
                                   className="bg-input rad15 w-100"
                                   inputProps={{
                                     accept: "image/*", // hanya file gambar
@@ -854,7 +867,7 @@ function Satuportal_listPengelolah() {
                             <div className="sm:col-span-3 -mt-2">
                               <div className="mt-0">
                                 <TextField
-                                  label="SubList 2"
+                                  label="Sub List Konten"
                                   className="bg-input rad15 w-full"
                                   value={title_images_b}
                                   onChange={(e) => settitle_image_b(e.target.value)}
@@ -885,7 +898,7 @@ function Satuportal_listPengelolah() {
                               <div className="mt-0">
                                 <TextField
                                   type="file"
-                                  label="Unggah Gambar 2"
+                                  label="Unggah Gambar Konten"
                                   className="bg-input rad15 w-100"
                                   inputProps={{
                                     accept: "image/*", // hanya file gambar
@@ -926,7 +939,7 @@ function Satuportal_listPengelolah() {
                             <div className="sm:col-span-3 -mt-2">
                               <div className="mt-0">
                                 <TextField
-                                  label="SubList 3"
+                                  label="Sub List Konten"
                                   className="bg-input rad15 w-full"
                                   value={title_images_c}
                                   onChange={(e) => settitle_image_c(e.target.value)}
@@ -957,7 +970,7 @@ function Satuportal_listPengelolah() {
                               <div className="mt-0">
                                 <TextField
                                   type="file"
-                                  label="Unggah Gambar 3"
+                                  label="Unggah Gambar Konten"
                                   className="bg-input rad15 w-100"
                                   inputProps={{
                                     accept: "image/*", // hanya file gambar
@@ -1000,7 +1013,7 @@ function Satuportal_listPengelolah() {
                           <div className="flex justify-center mt-12">
 
                             <button 
-                                onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
+                                onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
                                 <MdOutlineArrowCircleLeft   className='mt-1 mx-1'  /><span>Kembali</span>
                             </button>
                             
@@ -1009,7 +1022,7 @@ function Satuportal_listPengelolah() {
                               onClick={() => {
                                 handle_step2();
                               }}
-                              className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                              className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                               <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                           </div>
@@ -1051,7 +1064,7 @@ function Satuportal_listPengelolah() {
                           <div className="-mt-5 w-full h-2 bg-cyan-200">
                               <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                           </div>
-                          <div className="mt-12 text-base  text-center">
+                          <div className="mt-12 textsize10  text-center">
                               Yakin Data Sudah Benar ?
                           </div>
                           <div>
@@ -1059,12 +1072,12 @@ function Satuportal_listPengelolah() {
                                 <button 
                                     type="button"
                                     onClick={prevStep}
-                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                     <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                 </button>
                                 <button 
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                    className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                     <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                 </button>
                               </div>

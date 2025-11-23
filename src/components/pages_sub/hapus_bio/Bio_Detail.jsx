@@ -15,9 +15,10 @@ import { FaPenToSquare} from "react-icons/fa6";
 import { motion } from "framer-motion";
 
 import { MdDashboard,MdDataset,MdDetails} from "react-icons/md";
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 const Spinner = () => <div className="loader "></div>;
 
@@ -49,8 +50,8 @@ function MottoPengelolah() {
     setTimeout(() => {
       const getDataById = async () => {
         try {
-          const response = await axios.get(
-            apiurl+`backend_satudata_bio_detail/${id}`
+          const response = await api_url_satuadmin.get(
+            `backend_satudata_bio_detail/${id}`
           );
           setid(response.data.id);
           setemail(response.data.email);
@@ -112,15 +113,15 @@ function MottoPengelolah() {
     <div className="bg-gray-100  h-95 w-100  overflow-auto z-5  max-[640px]:mt-10">
       <NavSub  title="Motto Detail" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Data-Bio" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Bio
+          <NavLink to="/Data-Bio" className="text-silver-a mx-2 d-flex">
+            <MdDataset className="mt-1 textsize10" />Bio
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdDetails className="mt-1 textsize8" />Bio Detail
+          <NavLink  className="text-silver-a mx-2 d-flex">
+            <MdDetails className="mt-1 textsize10" />Bio Detail
           </NavLink>
         </p>
       </div>

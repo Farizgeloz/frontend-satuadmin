@@ -20,18 +20,18 @@ import { MdAddCircle,MdErrorOutline,MdOutlineArrowCircleLeft,MdOutlineArrowCircl
         MdCategory,
         MdOutlineErrorOutline,
         MdArrowCircleRight} from "react-icons/md";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-const apiurl = process.env.REACT_APP_URL;
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -77,12 +77,22 @@ function DatasetModalTambahFile() {
 
     try {
       setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses update data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
       setMessage("");
-      const res = await axios.post(
-        apiurl + "api/satupeta/location_point/addcsv",
+      const res = await api_url_satuadmin.post(
+        "api/satupeta/location_point/addcsv",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
+      Swal.close(); // tutup loading swal
       sweetsuccess(`✅ ${res.data.message} | Inserted: ${res.data.inserted}, Skipped: ${res.data.skipped}`);
       
     } catch (err) {
@@ -146,7 +156,7 @@ function DatasetModalTambahFile() {
           keyboard={false}
       >
           <Modal.Header closeButton className="border-b ">
-              <h4 className="text-sky-600 flex"><MdAddCircle  className="tsize-90 text-sky-600 mt-1"  />Tambah Lokasi Maplist Lewat File</h4>
+              <h4 className="text-sky-600 flex"><MdAddCircle  className="textsize10 text-sky-600 mt-1"  />Tambah Lokasi Maplist Lewat File</h4>
               
           </Modal.Header>
           <Modal.Body className="mt-2 bg-silver-light px-5">
@@ -158,7 +168,7 @@ function DatasetModalTambahFile() {
                   label="Pilih file (CSV/XLS/XLSX)"
                   className="bg-input rad15 w-100"
                   inputProps={{
-                    accept: "image/*", // hanya file gambar
+                    accept: '.csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/json', // hanya file gambar
                   }}
                   alt=""
                   InputLabelProps={{
@@ -170,7 +180,7 @@ function DatasetModalTambahFile() {
               </Form.Group>
               <button 
                   type="submit"
-                  className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1 mt-3">
+                  className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1 mt-3">
                   <MdOutlineSave  className='mt-1 mx-1'  /><span>{loading ? <Spinner animation="border" size="sm" /> : "Upload"}</span>
               </button>  
             </Form>

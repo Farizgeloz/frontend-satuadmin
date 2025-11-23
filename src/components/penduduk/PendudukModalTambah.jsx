@@ -12,7 +12,7 @@ import {
 } from "react-icons/io5";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
-import "../../App.css";
+import "../../styles/App.css";
 import Swal from 'sweetalert2';
 
 import TextField from '@mui/material/TextField';
@@ -20,7 +20,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 //import Autocomplete from "../auto/Autocomplete";
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 
 function ModalPendudukTambah() {
@@ -44,7 +44,7 @@ function ModalPendudukTambah() {
 
 
   const getKecamatan = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`get_kecamatan`
     );
     setKecamatanku(response.data.result);
@@ -136,7 +136,7 @@ function ModalPendudukTambah() {
             className="col-span-2  bg-white rounded text-link-sky text-center tsize-110 mt-1">
             <div className="py-2 px-2 h-9 mr-2 text-center  flex">
               <IoAddCircleOutline className="tsize-120 text-sky-600"  />
-              <span className="mt-1 tsize-90">Tambah Data Baru</span>
+              <span className="mt-1 textsize12">Tambah Data Baru</span>
             </div>
            
         </a>
@@ -149,7 +149,7 @@ function ModalPendudukTambah() {
         >
             <form onSubmit={savePenduduk}>
             <Modal.Header closeButton className="border-b ">
-                <h4 className="text-sky-600 flex"><IoAddCircleOutline  className="tsize-90 text-sky-600 mt-1"  />Tambah Data Penduduk</h4>
+                <h4 className="text-sky-600 flex"><IoAddCircleOutline  className="textsize12 text-sky-600 mt-1"  />Tambah Data Penduduk</h4>
                   
             </Modal.Header>
             <Modal.Body className="mt-2">
@@ -166,7 +166,7 @@ function ModalPendudukTambah() {
                               onChange={(e) => setName(e.target.value)}
                               type="text"
                               autoComplete="nama"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               />
                           </div>
                         </div>
@@ -181,7 +181,7 @@ function ModalPendudukTambah() {
                               onChange={(e) => setNik(e.target.value)}
                               type="text"
                               autoComplete="nik"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               />
                           </div>
                         </div>
@@ -198,7 +198,7 @@ function ModalPendudukTambah() {
                               onChange={(e) => setTgl_Lahir(e.target.value)}
                               type="text"
                               autoComplete="tgl_lahir"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               />
                           </div>
                         </div>
@@ -213,7 +213,7 @@ function ModalPendudukTambah() {
                               onChange={(e) => setTempat_Lahir(e.target.value)}
                               type="text"
                               autoComplete="tempat_lahir"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               />
                           </div>
                         </div>
@@ -226,7 +226,7 @@ function ModalPendudukTambah() {
                               value={jk}
                               onChange={(e) => setJK(e.target.value)}
                               autoComplete="role"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               >
                               <option value="L">Laki-Laki</option>
                               <option value="P">Perempuan</option>
@@ -245,7 +245,7 @@ function ModalPendudukTambah() {
                               onChange={(e) => setKabupaten(e.target.value)}
                               type="text"
                               autoComplete="kabupaten"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               />
                               
                           </div>
@@ -261,7 +261,7 @@ function ModalPendudukTambah() {
                               onChange={(e) => setKecamatan(e.target.value)}
                               type="text"
                               autoComplete="kecamatan"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               />
                               
                               <Autocomplete
@@ -302,7 +302,7 @@ function ModalPendudukTambah() {
                               onChange={(e) => setDesa(e.target.value)}
                               type="text"
                               autoComplete="desa"
-                              className="input-gray tsize-90"
+                              className="input-gray textsize12"
                               />
                           </div>
                         </div>

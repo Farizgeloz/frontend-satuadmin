@@ -37,8 +37,9 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 
 import { readString } from 'react-papaparse';
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 const XLSX = require('sheetjs-style');
 
@@ -87,7 +88,7 @@ function Location_MaplistPengelolah() {
     setTimeout(() => {
       const getDataById = async () => {
         try {
-          const response = await axios.get(apiurl+`api/opendata/dataset_data_detail/${id}`);
+          const response = await api_url_satuadmin.get(`api/opendata/dataset_data_detail/${id}`);
           setid(response.data.id);
           setkomponen(response.data.komponen);
           setkode(response.data.kode);
@@ -498,15 +499,15 @@ const downloadxls = ()=>{
     <div className="bg-gray-100  h-95 w-100  overflow-auto z-5  max-[640px]:mt-10">
       <NavSub  title="Location Maplist Detail" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Data-Location_Maplist" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Location Maplist
+          <NavLink to="/Data-Location_Maplist" className="text-silver-a mx-2 d-flex">
+            <MdDataset className="mt-1 textsize10" />Location Maplist
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdDetails className="mt-1 textsize8" />Detail
+          <NavLink  className="text-silver-a mx-2 d-flex">
+            <MdDetails className="mt-1 textsize10" />Detail
           </NavLink>
         </p>
       </div>

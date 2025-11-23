@@ -178,6 +178,19 @@ color: var(--silver);
   color:#ffffff
 }
 
+.text-silver-a{
+  color:var(--silver);
+  text-decoration:none;
+
+}
+.text-silver-a:hover{
+  color:var(--black)
+}
+
+
+
+
+
 
 
 
@@ -476,7 +489,7 @@ color: var(--silver);
     height: 5px;
     background-color: var(--light);
     left: 1%;
-    top:110%;
+    top:100%;
     position: absolute;
     border-radius: 5px;
   }

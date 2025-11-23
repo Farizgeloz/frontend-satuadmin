@@ -11,7 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2';
 
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 
 

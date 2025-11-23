@@ -33,8 +33,9 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 
 import { readString } from 'react-papaparse';
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 // Theme MUI custom label pagination
 const theme = createTheme({
@@ -105,7 +106,7 @@ function DatasetPengelolah() {
     setTimeout(() => {
       const getDataById = async () => {
         try {
-          const response = await axios.get(apiurl+`api/opendata/dataset_data_detail/${id}`);
+          const response = await api_url_satuadmin.get(`api/opendata/dataset_data_detail/${id}`);
           setid(response.data.id);
           setnama_dataset(response.data.nama_dataset);
           setkode(response.data.kode);
@@ -574,15 +575,15 @@ const downloadxls = ()=>{
     <div className="bg-gray-100  h-95 w-100  overflow-auto z-5  max-[640px]:mt-10">
       <NavSub  title="Dataset Detail" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Opendata/Dataset" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Dataset
+          <NavLink to="/Opendata/Dataset" className="text-silver-a mx-2 d-flex">
+            <MdDataset className="mt-1 textsize10" />Dataset
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdDetails className="mt-1 textsize8" />Dataset Detail
+          <NavLink  className="text-silver-a mx-2 d-flex">
+            <MdDetails className="mt-1 textsize10" />Dataset Detail
           </NavLink>
         </p>
       </div>
@@ -1170,7 +1171,7 @@ const downloadxls = ()=>{
               <Tab eventKey="raws" title="Data Raw" className='w-full  overflow-xx-auto'>
                 <div className=' max-w-full'>
                   <div className="text-center">
-                    <p className="text-sage textsize8">Pencarian berdasarkan Nama Dataset, Dimensi dan Prioritas Data.</p>
+                    <p className="text-sage textsize10">Pencarian berdasarkan Nama Dataset, Dimensi dan Prioritas Data.</p>
                     <div className="mb-3 max-w-full px-2">
                       <input
                         type="text"

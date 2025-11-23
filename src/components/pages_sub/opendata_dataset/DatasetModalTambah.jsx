@@ -25,8 +25,9 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 
 function ModalTambahUser() {
@@ -73,7 +74,7 @@ function ModalTambahUser() {
   const handleShow = () => setShow(true);
 
   const getDatasetItem = async () => {
-    const response = await axios.get(apiurl + 'api/opendata/dataset_item');
+    const response = await api_url_satuadmin.get('api/opendata/dataset_item');
 
     const data = response.data;
     setprodukdataku(response.data.resultSatker);
@@ -86,7 +87,7 @@ function ModalTambahUser() {
      
 
       try {
-        const response = await axios.get(apiurl + 'api/open-item/satker_code_search', {
+        const response = await api_url_satuadmin.get('api/open-item/satker_code_search', {
           params: {
             search_satker: satkeri.value
           }
@@ -256,7 +257,7 @@ function ModalTambahUser() {
         >
             <form onSubmit={saveDataset}>
             <Modal.Header closeButton className="border-b ">
-                <h4 className="text-sky-600 flex"><MdAddCircle  className="tsize-90 text-sky-600 mt-1"  />Tambah Dataset</h4>
+                <h4 className="text-sky-600 flex"><MdAddCircle  className="textsize10 text-sky-600 mt-1"  />Tambah Dataset</h4>
                 
             </Modal.Header>
             <Modal.Body className="mt-2 bg-silver-light p-0">
@@ -493,7 +494,7 @@ function ModalTambahUser() {
                                   onClick={() => {
                                     handle_step1();
                                   }}
-                                  className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                  className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                   <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                               </button>
                                
@@ -638,7 +639,7 @@ function ModalTambahUser() {
                           <div className="flex justify-center mt-12">
 
                             <button 
-                                onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
+                                onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
                                 <MdOutlineArrowCircleLeft   className='mt-1 mx-1'  /><span>Kembali</span>
                             </button>
                             
@@ -647,7 +648,7 @@ function ModalTambahUser() {
                               onClick={() => {
                                 handle_step2();
                               }} 
-                              className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                              className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                           </div>
@@ -780,12 +781,12 @@ function ModalTambahUser() {
                             <div className="flex justify-center mt-12">
 
                               <button 
-                                  onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
+                                  onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
                                   <MdOutlineArrowCircleLeft   className='mt-1 mx-1'  /><span>Kembali</span>
                               </button>
                               
                               <button 
-                                  onClick={nextStep} className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                  onClick={nextStep} className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                   <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                               </button>
                             </div>
@@ -834,7 +835,7 @@ function ModalTambahUser() {
                             <div className="-mt-5 w-full h-2 bg-cyan-200">
                                 <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                             </div>
-                            <div className="mt-12 text-base  text-center">
+                            <div className="mt-12 textsize10  text-center">
                                 Yakin Data Sudah Benar ?
                             </div>
                             <div>
@@ -842,12 +843,12 @@ function ModalTambahUser() {
                                     <button 
                                         type="button"
                                         onClick={prevStep}
-                                        className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                        className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                         <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                     </button>
                                     <button 
                                         type="submit"
-                                        className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                        className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                         <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                     </button>
                                 </div>

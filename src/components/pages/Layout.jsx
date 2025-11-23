@@ -5,7 +5,6 @@ import { useNavigate, useParams,Link, NavLink } from "react-router-dom";
 import Navbar from "../Nav";
 import Sidebar from "../Sidebar";
 
-const apiurl=process.env.REACT_APP_URL;
 
 const Layout = ({ children }) => {
 
@@ -21,7 +20,7 @@ const Layout = ({ children }) => {
   
   /*const getUser = async () => {
     try {
-      const response = await axios.get(apiurl+`me`, { withCredentials: true });
+      const response = await api_url_satuadmin.get(apiurl+`me`, { withCredentials: true });
       setName(response.data.name);
       setNick(response.data.nick);
       setRole(response.data.role);

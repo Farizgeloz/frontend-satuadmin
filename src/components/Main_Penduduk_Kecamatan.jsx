@@ -28,7 +28,7 @@ import {
   
 
 //const apikey=process.env.REACT_APP_API_KEY;
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 const PendudukKecamatanlist = () => {
   const [pendudukku, setPenduduk] = useState([]);
@@ -88,14 +88,14 @@ const PendudukKecamatanlist = () => {
   }, [page,page_kawin,page_jk,page_agama,page_pendidikan,page_umur,keywordkecamatan]);
 
   const getKecamatan = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`get_kecamatan`
     );
     setListKecamatanku(response.data.result);
   };
 
   const getPenduduk = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`backend_penduduk_kecamatan?search_kecamatan=${keywordkecamatan}&page=${page}&limit=${limit}&page_kawin=${page_kawin}&page_jk=${page_jk}&page_agama=${page_agama}&page_pendidikan=${page_pendidikan}&page_umur=${page_umur}`
     );
     setPenduduk(response.data.result);
@@ -276,7 +276,7 @@ const PendudukKecamatanlist = () => {
       <div className="col-span-6 rounded gap-x-6 grid grid-cols-1 grid-cols-6 h-14 bg-white mb-2">
         <p className="col-span-3 max-[640px]:col-span-3 tsize-110 font-semibold text-sky-600 flex pt-2"><IoAlbums  className="mt-2 mx-2"  />Data Penduduk Kecamatan</p>
         <p className="col-span-3 max-[640px]:col-span-3 tsize-70 font-semibold text-gray-500 flex flex-row-reverse pt-2 mt-2 mx-3">
-          <NavLink to="/Dashboard" className="text-link-gray">Dashboard</NavLink> / <NavLink to="/Data-Penduduk" className="text-link-gray">Data Penduduk</NavLink> / <NavLink to="/Data-Penduduk" className="text-link-gray">Kecamatan</NavLink>
+          <NavLink to="/Dashboard" className="text-silver-a">Dashboard</NavLink> / <NavLink to="/Data-Penduduk" className="text-silver-a">Data Penduduk</NavLink> / <NavLink to="/Data-Penduduk" className="text-link-gray">Kecamatan</NavLink>
         </p>
         <div className="col-span-6">
           <div className="garis2 garis1b"></div>
@@ -296,7 +296,7 @@ const PendudukKecamatanlist = () => {
                     </label>
                     <div className="mt-2">
                         <input
-                          className="input-gray tsize-90"
+                          className="input-gray textsize12"
                           placeholder="Kecamatan"
                           onFocus={() => setIsFocusKecamatan(true)}
                           onBlur={() => {

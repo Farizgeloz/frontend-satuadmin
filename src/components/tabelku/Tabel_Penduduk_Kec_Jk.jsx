@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../../App.css";
+import "../../styles/App.css";
 import exporting from 'highcharts/modules/exporting';
 import ChartColumn_Jk from "../chartku/kecamatan/ChartColumn_Kec_Jk";
 
@@ -12,7 +12,7 @@ import {
 
 
 //exporting(Highcharts);
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 function Tabel_Kec_Jk() {
 
@@ -24,7 +24,7 @@ function Tabel_Kec_Jk() {
   }, []);
 
   const getPenduduk = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`backend_penduduk_kecamatan_sub`
     );
     setPenduduk(response.data.result_jk);

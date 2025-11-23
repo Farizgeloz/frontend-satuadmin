@@ -31,7 +31,7 @@ import {
   } from "react-icons/io5";
 
 //const apikey=process.env.REACT_APP_API_KEY;
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 const Spinner = () => <div className="loader "></div>;
 const { SearchBar } = Search;
 const { ExportCSVButton } = CSVExport;
@@ -62,11 +62,11 @@ const Userlist = () => {
   }, []);
 
   /*const getUsers = async () => {
-    const response = await axios.get("http://localhost:5000/users2");
+    const response = await api_url_satuadmin.get("http://localhost:5000/users2");
     setUsers(response.data);
   };*/
   const getUsers = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`backend_users`
     );
     setUsers(response.data.resultuser);
@@ -144,7 +144,7 @@ const Userlist = () => {
       text:"Nick",
       filter: textFilter({style:{display:'block'}}),
       headerAlign: (column, colIndex) => 'center',
-      className: 'input-gray tsize-90',
+      className: 'input-gray textsize12',
       headerFormatter: HeadFormatter,
       headerClasses: 'bg-blue',
       style: {
@@ -157,7 +157,7 @@ const Userlist = () => {
       text:"Email",
       filter: textFilter({style:{display:'block'}}),
       headerAlign: (column, colIndex) => 'center',
-      className: 'input-gray tsize-90',
+      className: 'input-gray textsize12',
       headerFormatter: HeadFormatter,
       headerClasses: 'bg-blue',
       style: {
@@ -169,7 +169,7 @@ const Userlist = () => {
       text:"Role",
       filter: textFilter({style:{display:'block'}}),
       headerAlign: (column, colIndex) => 'center',
-      className: 'input-gray tsize-90',
+      className: 'input-gray textsize12',
       headerFormatter: HeadFormatter,
       headerClasses: 'bg-blue',
       style: {
@@ -180,7 +180,7 @@ const Userlist = () => {
       dataField:'',
       text:"Aksi",
       headerAlign: (column, colIndex) => 'center',
-      className: 'input-gray tsize-90',
+      className: 'input-gray textsize12',
       headerFormatter: HeadFormatter,
       headerClasses: 'bg-blue',
       formatter: (cell, row) => {
@@ -217,12 +217,12 @@ const Userlist = () => {
       <NavSub  title="Data Produsen" />
       <div className="col-span-3 rounded grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-6 drop-shadow-lg">
         <div className="col-span-3">
-          <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-              <MdDashboard className="mt-1 textsize8"/>Dashboard
+          <p className=" textsize12 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
+            <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+              <MdDashboard className="mt-1 textsize12"/>Dashboard
             </NavLink> / 
-            <NavLink to="/Data-User" className="text-link-sky mx-2 d-flex">
-              <MdDataset className="mt-1 textsize8" />Data User
+            <NavLink to="/Data-User" className="text-silver-a mx-2 d-flex">
+              <MdDataset className="mt-1 textsize12" />Data User
             </NavLink>
           </p>
         </div>
@@ -234,7 +234,7 @@ const Userlist = () => {
         <section id="teams" className="block   py-3 rad15 shaddow1 bg-white">
           
           <div className="text-center">
-            <p className="text-sage textsize8 ">Pencarian berdasarkan Nama Lengkap, Nick, Email atau Role.</p>
+            <p className="text-sage textsize12 ">Pencarian berdasarkan Nama Lengkap, Nick, Email atau Role.</p>
           </div>
           <Container fluid>
             <Row className='portfoliolist'>
@@ -379,7 +379,7 @@ const Userlist = () => {
 
                   <div className="sm:col-span-3">
                     <div className="mt-2 col-md:flex">
-                      <button type="submit" className="col-span-3 openModalBtn bg-sky-400 m-1 tsize-90">Cari Data</button>
+                      <button type="submit" className="col-span-3 openModalBtn bg-sky-400 m-1 textsize12">Cari Data</button>
                       
                     </div>
                   </div>
@@ -403,19 +403,19 @@ const Userlist = () => {
         <table className="max-[640px]:table-fixed border-collapse border-slate-400 w-full max-[640px]:w-full  overflow-auto">
           <thead>
             <tr className=" bg-blue-50 text-white w-full">
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Name</th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Email</th>
-              <th className="text-center tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6">Role</th>
-              <th className="text-center tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7">Actions</th>
+              <th className="textsize12 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Name</th>
+              <th className="textsize12 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3">Email</th>
+              <th className="text-center textsize12 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6">Role</th>
+              <th className="text-center textsize12 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7">Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user,index) => (
               <tr key={user.uuid} className=" even:bg-blue-50 odd:bg-white border-b-1 w-full">
-                <td className="tsize-90 border-slate-300 tracking-wide p-2 w-1/3">{user.name}</td>
-                <td className="tsize-90 border-slate-300 tracking-wide p-2 w-1/3">{user.email}</td>
-                <td className="text-center tsize-90 border-slate-300 tracking-wide w-1/6">{user.role}</td>
-                <td className="sm:flex justify-center justify-items-center tsize-90 border-slate-300 tracking-wide w-1/7">
+                <td className="textsize12 border-slate-300 tracking-wide p-2 w-1/3">{user.name}</td>
+                <td className="textsize12 border-slate-300 tracking-wide p-2 w-1/3">{user.email}</td>
+                <td className="text-center textsize12 border-slate-300 tracking-wide w-1/6">{user.role}</td>
+                <td className="sm:flex justify-center justify-items-center textsize12 border-slate-300 tracking-wide w-1/7">
                 <UserModalEdit
                       id={user.id}
                       name={user.name}
@@ -435,10 +435,10 @@ const Userlist = () => {
               </tr>
             ))}
             <tr className=" bg-blue-50 text-white w-full h-3">
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6"></th>
-              <th className="tsize-90 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7"></th>
+              <th className="textsize12 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
+              <th className="textsize12 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/3"></th>
+              <th className="textsize12 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/6"></th>
+              <th className="textsize12 border-2 border-white tracking-wide bg-gray-700 text-white px-2 w-1/7"></th>
             </tr>
           </tbody>
          

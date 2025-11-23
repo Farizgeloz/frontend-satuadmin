@@ -15,7 +15,7 @@ import DatasetModalDelete from "./DatasetModalDelete";
 
 import { MdDashboard, MdDataset, MdInfoOutline, MdEditSquare } from "react-icons/md";
 
-const apiurl = process.env.REACT_APP_URL;
+const apiurl =  import.meta.env.VITE_API_URL;;
 
 // Theme MUI custom label pagination
 const theme = createTheme({
@@ -141,10 +141,10 @@ const Datasetlist = () => {
         return (
           <div>
             <p className={`${textColor} my-1 textsize10`}>{row.nama_dataset}</p>
-            <p className="textsize8 rounded my-1 px-2 py-1 d-inline-block text-white bg-orange-600">
+            <p className="textsize10 rounded my-1 px-2 py-1 d-inline-block text-white bg-orange-600">
               {row.nama_opd}
             </p>
-            <p className="textsize8">
+            <p className="textsize10">
               <span className="font_weight600">Diperbaharui Tanggal: </span>{convertDate(row.updatedAt)}
             </p>
           </div>
@@ -163,7 +163,7 @@ const Datasetlist = () => {
         const isPrioritas = params.row.sifat_data === "Data Prioritas";
         return (
           <div className="text-center">
-            <p className={`textsize8 rounded px-2 py-1 d-inline-block text-white ${
+            <p className={`textsize10 rounded px-2 py-1 d-inline-block text-white ${
               isPrioritas ? "bg-green-600" : "bg-silver-dark"
             }`}>
               {params.row.sifat_data || "-"}
@@ -206,7 +206,7 @@ const Datasetlist = () => {
           <Tooltip title="Edit dataset" arrow>
             <Link to={`/Opendata/Dataset/Update/${params.row.nama_dataset}`} className="flex items-center justify-center mb-[2px]">
               <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-3 rounded-xl flex items-center">
-                <MdEditSquare className="mr-1" />
+                <MdEditSquare className="mr-1"  size={18}/>
               </button>
             </Link>
           </Tooltip>
@@ -228,12 +228,12 @@ const Datasetlist = () => {
       <NavSub title="Dataset" />
       <div className="col-span-3 rounded grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-6 drop-shadow-lg">
         <div className="col-span-3">
-          <p className="tsize-90 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-              <MdDashboard className="mt-1 textsize8" />Dashboard
+          <p className="textsize10 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
+            <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+              <MdDashboard className="mt-1 textsize10" />Dashboard
             </NavLink> / 
-            <NavLink to="/Data-Dataset" className="text-link-sky mx-2 d-flex">
-              <MdDataset className="mt-1 textsize8" />Dataset
+            <NavLink to="/Data-Dataset" className="text-silver-a mx-2 d-flex">
+              <MdDataset className="mt-1 textsize10" />Dataset
             </NavLink>
           </p>
         </div>
@@ -245,7 +245,7 @@ const Datasetlist = () => {
       <div className='drop-shadow-lg overflow-xx-auto mb-9 p-2'>
         <section id="teams" className="block py-3 rad15 shaddow1 bg-white">
           <div className="text-center">
-            <p className="text-sage textsize8">Pencarian berdasarkan Nama Dataset, Dimensi dan Prioritas Data.</p>
+            <p className="text-sage textsize10">Pencarian berdasarkan Nama Dataset, Dimensi dan Prioritas Data.</p>
             <div className="mb-3">
               <input
                 type="text"

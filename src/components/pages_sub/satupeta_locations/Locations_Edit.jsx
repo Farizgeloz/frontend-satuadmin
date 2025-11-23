@@ -28,21 +28,21 @@ import { MdDashboard,MdDataset,MdOutlineErrorOutline,
 
 
 import _ from "lodash";
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
 const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
 const userloginsatker = userlogin.satker_id || '';
 const userloginadmin = userlogin.id || '';
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -63,12 +63,12 @@ const textFieldStyle = (theme) => ({
 });
 
 function DatasetPengelolah() {
-  const [bidangurusanku, setbidangurusanku] = useState([""]);
+  const [sektorku, setsektorku] = useState([""]);
   const [satkerku, setsatkerku] = useState([""]);
   const [nama_locations, setnama_locations] = useState("");
   const [satker, setsatker] = useState(null);
-  const [bidangurusan, setbidangurusan] = useState(null);
-
+  const [sektor, setsektor] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   
   
@@ -88,11 +88,11 @@ function DatasetPengelolah() {
 
   
   const getDatasetItem = async () => {
-    const response = await axios.get(apiurl + "api/satupeta/map_item2", {
+    const response = await api_url_satuadmin.get("api/satupeta/map_item2", {
       params: { search_satker:userloginsatker }
     });
     const data = response.data;
-    setbidangurusanku(response.data.resultbidangurusan);
+    setsektorku(response.data.resultsektor);
     setsatkerku(response.data.resultsatker);
   };
 
@@ -101,12 +101,12 @@ function DatasetPengelolah() {
 
   const getDataById = async () => {
     try {
-      const response = await axios.get(apiurl + `api/satupeta/locations/detail/${id}`);
+      const response = await api_url_satuadmin.get(`api/satupeta/locations/detail/${id}`);
 
       // Ambil data utama
       setnama_locations(response.data.nama_location);
       setsatker({ value: response.data.satker_id, label: response.data.nama_opd });
-      setbidangurusan({ value: response.data.bidang_urusan_id, label: response.data.nama_bidang_urusan });
+      setsektor({ value: response.data.sektor_id, label: response.data.nama_sektor });
 
     } catch (err) {
       console.error("❌ Gagal ambil data detail:", err);
@@ -120,14 +120,28 @@ function DatasetPengelolah() {
     const formData = new FormData();
     formData.append("nama_location",nama_locations);
     formData.append("satker_id",satker.value);
-    formData.append("bidang_urusan_id",bidangurusan.value);
-    formData.append("admin",String(userloginadmin));
+    formData.append("sektor_id",sektor.value);
+    formData.append("admin",userloginadmin);
+    formData.append("jenis","Satu Peta Lokasi");
+    formData.append("komponen","Update Lokasi Satu Peta");
     try {
-      await axios.patch(`${apiurl}api/satupeta/locations/update/${id}`, formData, {
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses update data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.patch(`api/satupeta/locations/update/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
      
     } catch (error) {
@@ -151,7 +165,7 @@ function DatasetPengelolah() {
           
         },
         willClose: () => {
-              navigate(`/Satupeta/Locations`);
+              navigate(`/Satupeta/Lokasi-Peta`);
               //navigate(`/Data-Dataset`);
         }
       }).then((result) => {
@@ -190,21 +204,21 @@ function DatasetPengelolah() {
 
   const [validasi_nama_locations, setvalidasi_nama_locations] = useState(false);
   const [validasi_satker, setvalidasi_satker] = useState(false);
-  const [validasi_bidangurusan, setvalidasi_bidangurusan] = useState(false);
+  const [validasi_sektor, setvalidasi_sektor] = useState(false);
 
  
   
   const handle_step = (event) => {
     const validNama = (nama_locations?.length || 0) >= 3;
     const validsatker = satker !== null;
-    const validbidangurusan = bidangurusan !== null;
+    const validsektor = sektor !== null;
     
 
     setvalidasi_nama_locations(!validNama);
     setvalidasi_satker(!validsatker);
-    setvalidasi_bidangurusan(!validbidangurusan);
+    setvalidasi_sektor(!validsektor);
 
-    if (validNama && validsatker && validbidangurusan) {
+    if (validNama && validsatker && validsektor) {
       nextStep();
     }
   };
@@ -227,17 +241,17 @@ function DatasetPengelolah() {
 
   return (
     <div className="bg-gray-100  h-95    overflow-auto z-5 max-[640px]:mt-10">
-      <NavSub  title="Dataset Edit" />
+      <NavSub  title="Satupeta Lokasi Peta Edit" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex textsize10">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Satupeta/Locations" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Locations
+          <NavLink to="/Satupeta/Lokasi-Peta" className="text-silver-a mr-2 d-flex textsize10">
+            <MdDataset className="mt-1 textsize10" />Lokasi Peta
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdEditSquare className="mt-1 textsize8" />Edit
+          <NavLink  className="text-silver-a mr-2 d-flex textsize10">
+            <MdEditSquare className="mt-1 textsize10" />Edit
           </NavLink>
         </p>
       </div>
@@ -366,14 +380,14 @@ function DatasetPengelolah() {
                                 <Autocomplete
                                   className='tsize-110'
                                   isOptionEqualToValue={(option, value) => option?.value === value?.value}
-                                  id="combo-box-bidangurusan"
-                                  options={bidangurusanku.map((row) => ({
-                                    label: row.nama_bidang_urusan,
-                                    value: row.id_bidang_urusan
+                                  id="combo-box-sektor"
+                                  options={sektorku.map((row) => ({
+                                    label: row.nama_sektor,
+                                    value: row.id_sektor
                                   }))}
                                   getOptionLabel={(option) => option.label || ""}
-                                  value={bidangurusan}
-                                  onChange={(event, newValue) => setbidangurusan(newValue)}
+                                  value={sektor}
+                                  onChange={(event, newValue) => setsektor(newValue)}
                                   clearOnEscape
                                   renderInput={(params) => (
                                     <TextField
@@ -394,7 +408,7 @@ function DatasetPengelolah() {
                                     },
                                   }}
                                 />
-                                  {validasi_bidangurusan && <p className="transisi mb-0 text-red-700 d-flex"><MdOutlineErrorOutline className="mt-1 mx-2" />Harus Dipilih.</p>}
+                                  {validasi_sektor && <p className="transisi mb-0 text-red-700 d-flex"><MdOutlineErrorOutline className="mt-1 mx-2" />Harus Dipilih.</p>}
                               </div>
                             </div>
                             
@@ -409,7 +423,7 @@ function DatasetPengelolah() {
                                 onClick={() => {
                                   handle_step();
                                 }}
-                                className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <span>Lanjut</span><MdArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                               
@@ -447,7 +461,7 @@ function DatasetPengelolah() {
                           <div className="-mt-5 w-full h-2 bg-cyan-200">
                               <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                           </div>
-                          <div className="mt-12 text-base  text-center">
+                          <div className="mt-12 textsize10  text-center">
                               Yakin Data Sudah Benar ?
                           </div>
                           <div>
@@ -455,12 +469,12 @@ function DatasetPengelolah() {
                                 <button 
                                     type="button"
                                     onClick={prevStep}
-                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                     <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                 </button>
                                 <button 
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                    className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                     <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                 </button>
                               </div>

@@ -26,18 +26,21 @@ import { MdDashboard,MdDataset,MdEditSquare,
 
 
 import _ from "lodash";
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const useropdlogin = userlogin.opd_id || '';
+const userloginadmin = userlogin.id || '';
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -60,12 +63,12 @@ const textFieldStyle = (theme) => ({
 const textFieldStyleMultiline = (theme) => ({
   "& .MuiOutlinedInput-root": {
     height: "auto",
-    fontSize: "0.9rem",
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -93,7 +96,7 @@ function MottoPengelolah() {
   const [contents, setcontents] = useState("");
   const [file, setfile] = useState("");
   const [images, setimages] = useState("");
-
+  const [loading, setLoading] = useState(false);
 
   const loadImage = (e) =>{
     const image = e.target.files[0];
@@ -118,7 +121,7 @@ function MottoPengelolah() {
  
 
   const getDataById = async () => {
-    const response = await axios.get(apiurl+`api/open-item/komponen_detail/${id}`);
+    const response = await api_url_satuadmin.get(`api/open-item/komponen_detail/${id}`);
     setid(response.data.id);
     settitle(response.data.title);
     setcontents(response.data.contents);
@@ -133,13 +136,28 @@ function MottoPengelolah() {
     formData.append("file_images_a",file);
     formData.append("title",title);
     formData.append("contents",contents);
+    formData.append("admin", userloginadmin);
+    formData.append("jenis", "Satu Portal Motto");
+    formData.append("komponen", "Update Motto Satu Portal");
     
     try {
-      await axios.patch(`${apiurl}api/open-item/komponen_update/${idku}`, formData, {
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses update data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.patch(`api/open-item/komponen_update/${idku}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
      
     } catch (error) {
@@ -222,15 +240,15 @@ function MottoPengelolah() {
     <div className="bg-gray-100  h-95    overflow-auto z-5 max-[640px]:mt-10">
       <NavSub  title="Motto Edit" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex textsize10">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Satuportal/Motto" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Motto
+          <NavLink to="/Satuportal/Motto" className="text-silver-a mr-2 d-flex textsize10">
+            <MdDataset className="mt-1 textsize10" />Motto
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdEditSquare className="mt-1 textsize8" />Edit
+          <NavLink  className="text-silver-a mr-2 d-flex textsize10">
+            <MdEditSquare className="mt-1 textsize10" />Edit
           </NavLink>
         </p>
       </div>
@@ -320,7 +338,7 @@ function MottoPengelolah() {
                           <div className="mt-0">
                             <TextField
                               type="file"
-                              label="Unggah Gambar"
+                              label="Unggah Gambar Konten"
                               className="bg-input rad15 w-100"
                               alt=""
                               InputLabelProps={{
@@ -365,7 +383,7 @@ function MottoPengelolah() {
                           onClick={() => {
                             handle_step1();
                           }}  
-                          className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                          className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                             <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                         </button>
                       </div>
@@ -380,7 +398,7 @@ function MottoPengelolah() {
                         transition={{ duration: 0.3 }}
                         className="md:w-3/5 mx-auto py-12">
                         
-                        <div className="mt-12 text-base  text-center">
+                        <div className="mt-12 textsize10  text-center">
                             Yakin Data Sudah Benar ?
                         </div>
                         <div>
@@ -388,12 +406,12 @@ function MottoPengelolah() {
                                 <button 
                                     type="button"
                                     onClick={prevStep}
-                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                     <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                 </button>
                                 <button 
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                    className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                     <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                 </button>
                             </div>

@@ -24,8 +24,9 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 
 function ModalTambahUser() {
@@ -154,7 +155,7 @@ function ModalTambahUser() {
     formData.append("linked",linked);
 
     try {
-      await axios.post(apiurl + 'api/open-item/ekosistem_list_add', formData);
+      await api_url_satuadmin.post('api/open-item/ekosistem_list_add', formData);
 
       setShow(false);
       sweetsuccess();
@@ -303,7 +304,7 @@ function ModalTambahUser() {
         >
             <form onSubmit={saveSatkercode}>
             <Modal.Header closeButton className="border-b ">
-                <h4 className="text-sky-600 flex"><MdAddCircle  className="tsize-90 text-sky-600 mt-1"  />Tambah Location Maplist</h4>
+                <h4 className="text-sky-600 flex"><MdAddCircle  className="textsize10 text-sky-600 mt-1"  />Tambah Location Maplist</h4>
                 
             </Modal.Header>
             <Modal.Body className="mt-2 bg-silver-light p-0">
@@ -415,7 +416,7 @@ function ModalTambahUser() {
                                 onClick={() => {
                                   handle_step1();
                                 }}
-                                className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <span>Lanjut</span><MdArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                               
@@ -461,7 +462,7 @@ function ModalTambahUser() {
                           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                             <div className="sm:col-span-3 -mt-2">
                               <label htmlFor="last-name" className="block text-sm/6 font-semibold text-gray-600 d-flex">
-                              <MdOutlineToday className="mt-1 mx-2 text-cyan-500"  />SubList 1
+                              <MdOutlineToday className="mt-1 mx-2 text-cyan-500"  />Sub List Konten
                               </label>
                               <div className="mt-0">
                                   <input
@@ -487,7 +488,7 @@ function ModalTambahUser() {
                                   accept="image/*" // hanya file gambar
                                   className="input-green-2 tsize-110"
                                   />
-                                  <span className="italicku textsize8 text-sliver">(Pilih File .jpg dan .png)</span>
+                                  <span className="italicku textsize10 text-sliver">(Pilih File .jpg dan .png)</span>
                                   {fileError && (
                                     <p className="text-red-600 mt-2 d-flex">
                                       <MdOutlineErrorOutline className="mt-1 me-2" />
@@ -499,7 +500,7 @@ function ModalTambahUser() {
                             </div>
                             <div className="sm:col-span-3 -mt-2">
                               <label htmlFor="last-name" className="block text-sm/6 font-semibold text-gray-600 d-flex">
-                              <MdOutlineToday className="mt-1 mx-2 text-cyan-500"  />SubList 2
+                              <MdOutlineToday className="mt-1 mx-2 text-cyan-500"  />Sub List Konten
                               </label>
                               <div className="mt-0">
                                   <input
@@ -525,7 +526,7 @@ function ModalTambahUser() {
                                   accept="image/*" // hanya file gambar
                                   className="input-green-2 tsize-110"
                                   />
-                                  <span className="italicku textsize8 text-sliver">(Pilih File .jpg dan .png)</span>
+                                  <span className="italicku textsize10 text-sliver">(Pilih File .jpg dan .png)</span>
                                   {fileError && (
                                     <p className="text-red-600 mt-2 d-flex">
                                       <MdOutlineErrorOutline className="mt-1 me-2" />
@@ -537,7 +538,7 @@ function ModalTambahUser() {
                             </div>
                             <div className="sm:col-span-3 -mt-2">
                               <label htmlFor="last-name" className="block text-sm/6 font-semibold text-gray-600 d-flex">
-                              <MdOutlineToday className="mt-1 mx-2 text-cyan-500"  />SubList 3
+                              <MdOutlineToday className="mt-1 mx-2 text-cyan-500"  />Sub List Konten
                               </label>
                               <div className="mt-0">
                                   <input
@@ -563,7 +564,7 @@ function ModalTambahUser() {
                                   accept="image/*" // hanya file gambar
                                   className="input-green-2 tsize-110"
                                   />
-                                  <span className="italicku textsize8 text-sliver">(Pilih File .jpg dan .png)</span>
+                                  <span className="italicku textsize10 text-sliver">(Pilih File .jpg dan .png)</span>
                                   {fileError && (
                                     <p className="text-red-600 mt-2 d-flex">
                                       <MdOutlineErrorOutline className="mt-1 me-2" />
@@ -578,7 +579,7 @@ function ModalTambahUser() {
                           <div className="flex justify-center mt-12">
 
                             <button 
-                                onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
+                                onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
                                 <MdOutlineArrowCircleLeft   className='mt-1 mx-1'  /><span>Kembali</span>
                             </button>
                             
@@ -587,7 +588,7 @@ function ModalTambahUser() {
                               onClick={() => {
                                 handle_step2();
                               }}
-                              className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                              className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                               <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                           </div>
@@ -629,7 +630,7 @@ function ModalTambahUser() {
                           <div className="-mt-5 w-full h-2 bg-cyan-200">
                               <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                           </div>
-                          <div className="mt-12 text-base  text-center">
+                          <div className="mt-12 textsize10  text-center">
                               Yakin Data Sudah Benar ?
                           </div>
                           <div>
@@ -637,12 +638,12 @@ function ModalTambahUser() {
                                 <button 
                                     type="button"
                                     onClick={prevStep}
-                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                     <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                 </button>
                                 <button 
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                    className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                     <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                 </button>
                               </div>

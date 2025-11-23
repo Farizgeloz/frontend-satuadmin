@@ -13,8 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import "../../../App.css";
 import Swal from 'sweetalert2';
-
-const apiurl=process.env.REACT_APP_URL;
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
 
 function ModalTambahUser() {
@@ -51,7 +50,7 @@ function ModalTambahUser() {
   const handleShow = () => setShow(true);
 
   const getDatasetItem = async () => {
-    const response = await axios.get(apiurl + 'api/satupeta/map_data/admin');
+    const response = await api_url_satuadmin.get('api/satupeta/map_data/admin');
 
     const data = response.data;
     setlocationku(response.data.resultlocation);
@@ -60,7 +59,7 @@ function ModalTambahUser() {
   };
 
   const getDatasetItem2 = async () => {
-    const response = await axios.get(apiurl + "api/satupeta/map_data/admin", {
+    const response = await api_url_satuadmin.get("api/satupeta/map_data/admin", {
       params: { search_kecamatan: kecamatan ? kecamatan.value : "" }
     });
     const data = response.data;
@@ -82,7 +81,7 @@ function ModalTambahUser() {
     console.log("coba:"+lokasi.value);
 
     try {
-      await axios.post(apiurl + 'api/satupeta/location_point/add', formData);
+      await api_url_satuadmin.post('api/satupeta/location_point/add', formData);
 
       setShow(false);
       sweetsuccess();
@@ -194,7 +193,7 @@ function ModalTambahUser() {
         >
             <form onSubmit={saveDataset}>
             <Modal.Header closeButton className="border-b ">
-                <h4 className="text-sky-600 flex"><MdAddCircle  className="tsize-90 text-sky-600 mt-1"  />Tambah Lokasi Point</h4>
+                <h4 className="text-sky-600 flex"><MdAddCircle  className="textsize10 text-sky-600 mt-1"  />Tambah Lokasi Point</h4>
                 
             </Modal.Header>
             <Modal.Body className="mt-2 bg-silver-light p-0">
@@ -402,7 +401,7 @@ function ModalTambahUser() {
                                   onClick={() => {
                                     handle_step();
                                   }}
-                                  className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                  className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                   <span>Lanjut</span><MdArrowCircleRight  className='mt-1 mx-1'  />
                               </button>
                                 
@@ -440,7 +439,7 @@ function ModalTambahUser() {
                             <div className="-mt-5 w-full h-2 bg-cyan-200">
                                 <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                             </div>
-                            <div className="mt-12 text-base  text-center">
+                            <div className="mt-12 textsize10  text-center">
                                 Yakin Data Sudah Benar ?
                             </div>
                             <div>
@@ -448,12 +447,12 @@ function ModalTambahUser() {
                                   <button 
                                       type="button"
                                       onClick={prevStep}
-                                      className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                      className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                       <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                   </button>
                                   <button 
                                       type="submit"
-                                      className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                      className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                       <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                   </button>
                                 </div>

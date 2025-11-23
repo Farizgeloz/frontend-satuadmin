@@ -30,21 +30,20 @@ import { MdDashboard,MdDataset,MdEditSquare,
 
 
 import _ from "lodash";
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
 const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
-const userloginsatker = userlogin.satker_id || '';
 const userloginadmin = userlogin.id || '';
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -67,12 +66,12 @@ const textFieldStyle = (theme) => ({
 const textFieldStyleMultiline = (theme) => ({
   "& .MuiOutlinedInput-root": {
     height: "auto",
-    fontSize: "0.9rem",
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -111,6 +110,7 @@ function IklanPengelolah() {
   const [images_a, setimages_a] = useState("");
   const [images_b, setimages_b] = useState("");
   const [images_c, setimages_c] = useState("");
+  const [loading, setLoading] = useState(false);
 
 
   const loadImage_a = (e) =>{
@@ -133,7 +133,7 @@ function IklanPengelolah() {
     const image = e.target.files[0];
     setfile_c(image);
     if (image) {
-      setimages_a(URL.createObjectURL(image)); // buat URL sementara
+      setimages_c(URL.createObjectURL(image)); // buat URL sementara
     } else {
     }
   }
@@ -162,15 +162,15 @@ function IklanPengelolah() {
   const getDataById = async () => {
     
     
-    const response = await axios.get(apiurl+`api/satupeta/map_berita/detail/${id}`);
-    setid(response.data.id);
+    const response = await api_url_satuadmin.get(`api/satupeta/map_artikel/detail_admin/${id}`);
+    setid(response.data.id_artikel);
     settitle(response.data.title);
     setcontent_a(response.data.content_a);
     setcontent_b(response.data.content_b);
     setcontent_c(response.data.content_c);
-    setimages_a(response.data.presignedUrl_a);
-    setimages_b(response.data.presignedUrl_b);
-    setimages_c(response.data.presignedUrl_c);
+    setimages_a(response.data.presignedUrl_a_tumb);
+    setimages_b(response.data.presignedUrl_b_tumb);
+    setimages_c(response.data.presignedUrl_c_tumb);
     setsumber(response.data.sumber);
     setdownload(response.data.presignedUrl_download);
     setvisibilitas({ value: response.data.visibilitas, label: response.data.visibilitas });
@@ -192,15 +192,29 @@ function IklanPengelolah() {
     formData.append("sumber",sumber);
     formData.append("download_file",file_download);
     formData.append("visibilitas",visibilitas.value);
-    formData.append("admin",String(userloginadmin));
+    formData.append("admin",userloginadmin);
+    formData.append("jenis","Satu Peta Artikel");
+    formData.append("komponen","Update Artikel Satu Peta");
     
     
     try {
-      await axios.patch(`${apiurl}api/satupeta/map_berita/update/${idku}`, formData, {
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses update data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.patch(`api/satupeta/map_artikel/update/${idku}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
      
     } catch (error) {
@@ -224,7 +238,7 @@ function IklanPengelolah() {
           
         },
         willClose: () => {
-              navigate(`/Satupeta/Berita`);
+              navigate(`/Satupeta/Artikel`);
         }
       }).then((result) => {
       });
@@ -269,7 +283,7 @@ function IklanPengelolah() {
     }
 
     if (!content_a) {
-      newErrors.content_a = "Konten wajib diisi";
+      newErrors.content_a = "Isi Konten wajib diisi";
     }
     /*if (!file_a) {
       newErrors.file_a = "Upload wajib Ada";
@@ -293,17 +307,17 @@ function IklanPengelolah() {
 
   return (
     <div className="bg-gray-100  h-95    overflow-auto z-5 max-[640px]:mt-10">
-      <NavSub  title="Satu Peta Iklan Edit" />
+      <NavSub  title="Satu Peta Artikel Edit" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Satupeta/Berita" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Satupeta Berita
+          <NavLink to="/Satupeta/Artikel" className="text-silver-a mx-2 d-flex">
+            <MdDataset className="mt-1 textsize10" />Satupeta Artikel
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdEditSquare className="mt-1 textsize8" />Edit
+          <NavLink  className="text-silver-a mx-2 d-flex">
+            <MdEditSquare className="mt-1 textsize10" />Edit
           </NavLink>
         </p>
       </div>
@@ -313,6 +327,7 @@ function IklanPengelolah() {
         
         
         <Row className='margin-t3 bg-white pb-5 mx-5 shaddow1'>
+          <p> idku {idku}</p>
           <form onSubmit={updateIklan}>
             <div className="relative flex px-5">
               <div className="container max-w-screen-xl mx-auto my-auto relative flex flex-col w-4/5">
@@ -330,7 +345,7 @@ function IklanPengelolah() {
                         <div className="sm:col-span-6 -mt-4">
                           <div className="mt-0">
                               <TextField
-                                label="Judul Berita"
+                                label="Judul Artikel"
                                 className="bg-input rad15 w-full"
                                 value={title}
                                 onChange={(e) => settitle(e.target.value)}
@@ -394,7 +409,7 @@ function IklanPengelolah() {
                         <div className="sm:col-span-6 -mt-4">
                           <div className="mt-0">
                             <TextField
-                              label="Konten a"
+                              label="Isi Konten"
                               className="bg-input rad15 w-full"
                               value={content_a}
                               onChange={(e) => setcontent_a(e.target.value)}
@@ -427,7 +442,7 @@ function IklanPengelolah() {
                           <div className="mt-0">
                             <TextField
                               type="file"
-                              label="Unggah Gambar"
+                              label="Unggah Gambar Konten"
                               className="bg-input rad15 w-100"
                               InputLabelProps={{
                                 shrink: true, // biar label tetap tampil di atas saat file dipilih
@@ -467,7 +482,7 @@ function IklanPengelolah() {
                         <div className="sm:col-span-6 -mt-4">
                           <div className="mt-0">
                             <TextField
-                              label="Konten b"
+                              label="Isi Konten"
                               className="bg-input rad15 w-full"
                               value={content_b}
                               onChange={(e) => setcontent_b(e.target.value)}
@@ -499,7 +514,7 @@ function IklanPengelolah() {
                           <div className="mt-0">
                             <TextField
                               type="file"
-                              label="Unggah Gambar"
+                              label="Unggah Gambar Konten"
                               className="bg-input rad15 w-100"
                               InputLabelProps={{
                                 shrink: true, // biar label tetap tampil di atas saat file dipilih
@@ -511,7 +526,7 @@ function IklanPengelolah() {
                                     {file_b && (
                                       <InputAdornment position="end">
                                         <IconButton
-                                          onClick={() => setfile_a("")}
+                                          onClick={() => setfile_b("")}
                                           edge="end"
                                           size="small"
                                         >
@@ -539,7 +554,7 @@ function IklanPengelolah() {
                         <div className="sm:col-span-6 -mt-4">
                           <div className="mt-0">
                             <TextField
-                              label="Konten c"
+                              label="Isi Konten"
                               className="bg-input rad15 w-full"
                               value={content_c}
                               onChange={(e) => setcontent_c(e.target.value)}
@@ -571,7 +586,7 @@ function IklanPengelolah() {
                           <div className="mt-0">
                             <TextField
                               type="file"
-                              label="Unggah Gambar"
+                              label="Unggah Gambar Konten"
                               className="bg-input rad15 w-100"
                               InputLabelProps={{
                                 shrink: true, // biar label tetap tampil di atas saat file dipilih
@@ -653,7 +668,7 @@ function IklanPengelolah() {
                           onClick={() => {
                             handleNext();
                           }}  
-                          className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                          className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                             <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                         </button>
                       </div>
@@ -668,7 +683,7 @@ function IklanPengelolah() {
                         transition={{ duration: 0.3 }}
                         className="md:w-3/5 mx-auto py-12">
                         
-                        <div className="mt-12 text-base  text-center">
+                        <div className="mt-12 textsize10  text-center">
                             Yakin Data Sudah Benar ?
                         </div>
                         <div>
@@ -676,12 +691,12 @@ function IklanPengelolah() {
                                 <button 
                                     type="button"
                                     onClick={prevStep}
-                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                     <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                 </button>
                                 <button 
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                    className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                     <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                 </button>
                             </div>

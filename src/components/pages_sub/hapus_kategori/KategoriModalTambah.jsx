@@ -97,7 +97,7 @@ function ModalTambahKategori() {
         >
             <form onSubmit={saveKategori}>
             <Modal.Header closeButton className="border-b ">
-                <h4 className="text-sky-600 flex"><MdAddCircle  className="tsize-90 text-sky-600 mt-1"  />Tambah Data Kategori</h4>
+                <h4 className="text-sky-600 flex"><MdAddCircle  className="textsize10 text-sky-600 mt-1"  />Tambah Data Kategori</h4>
                 
             </Modal.Header>
             <Modal.Body className="mt-2">
@@ -113,7 +113,7 @@ function ModalTambahKategori() {
                         onChange={(e) => setkategori(e.target.value)}
                         type="text"
                         autoComplete="nama"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize10"
                         />
                         {validasi_kategori && <p className="transisi mb-0 text-red-700 d-flex"><MdErrorOutline  className="mt-1 mx-2" />Minimal 3 karakter.</p>}
                     </div>
@@ -128,12 +128,12 @@ function ModalTambahKategori() {
                 <button 
                     type="button"
                     onClick={handleClose}
-                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                     <MdOutlineExitToApp  className='mt-1 mx-1'  /><span>Batal</span>
                 </button>
                 <button 
                     type="submit"
-                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                    className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                     <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                 </button>
             </Modal.Footer>

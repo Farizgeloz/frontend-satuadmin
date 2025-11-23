@@ -14,19 +14,23 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import "../../../App.css";
 import Swal from 'sweetalert2';
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const useropdlogin = userlogin.opd_id || '';
+const userloginadmin = userlogin.id || '';
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -49,12 +53,12 @@ const textFieldStyle = (theme) => ({
 const textFieldStyleMultiline = (theme) => ({
   "& .MuiOutlinedInput-root": {
     height: "auto",
-    fontSize: "0.9rem",
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -77,7 +81,7 @@ const textFieldStyleMultiline = (theme) => ({
 function ModalTambahUser() {
   const [satkerku, setprodukdataku] = useState([]);
   const [kategoriku, setkategoriku] = useState([]);
-  
+  const [loading, setLoading] = useState(false);
 
   const [title, settitle] = useState("");
   const [contents, setcontents] = useState("");
@@ -104,14 +108,29 @@ function ModalTambahUser() {
     e.preventDefault();
     const formData = new FormData();
     formData.append("kategori", "Satu Portal Motto"); // pastikan file diset dengan setFile()
-    formData.append("file", file); // pastikan file diset dengan setFile()
+    formData.append("file_images_a", file); // pastikan file diset dengan setFile()
     formData.append("title", title);
     formData.append("contents", contents);
+    formData.append("admin", userloginadmin);
+    formData.append("jenis", "Satu Portal Motto");
+    formData.append("komponen", "Tambah Motto Satu Portal");
 
     try {
-      await axios.post(apiurl + 'api/open-item/komponen_add', formData);
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses tambah data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.post('api/open-item/komponen_add', formData);
 
       setShow(false);
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
     } catch (error) {
       sweeterror(error.response?.data?.msg || "Gagal menambah data2");
@@ -206,7 +225,7 @@ function ModalTambahUser() {
          <Link onClick={handleShow} className="col-span-2 max-[640px]:col-span-2 tsize-130 font-semibold text-white-a flex-right ">
           <button 
             className="styles_button__u_d5l h-6v hover:bg-teal-600 text-white font-bold py-1 px-4 border-b-4 border-teal-600 hover:border-teal-500 rounded-xl d-flex">
-              <MdAddCircle className="mt-1 mx-1" /><span>Tambah Motto</span>
+              <MdAddCircle className="mt-1 mx-1" /><span>Tambah Satu Portal Motto</span>
           </button>
         </Link>
       
@@ -218,7 +237,7 @@ function ModalTambahUser() {
         >
             <form onSubmit={saveMotto}>
             <Modal.Header closeButton className="border-b ">
-                <h4 className="text-sky-600 flex"><MdAddCircle  className="tsize-90 text-sky-600 mt-1"  />Tambah Motto</h4>
+                <h4 className="text-sky-600 flex"><MdAddCircle  className="textsize10 text-sky-600 mt-1"  />Tambah Motto</h4>
                 
             </Modal.Header>
             <Modal.Body className="mt-2 bg-silver-light p-0">
@@ -302,7 +321,7 @@ function ModalTambahUser() {
                               <div className="mt-0">
                                 <TextField
                                   type="file"
-                                  label="Unggah Gambar"
+                                  label="Unggah Gambar Konten"
                                   className="bg-input rad15 w-100"
                                   alt=""
                                   InputLabelProps={{
@@ -346,7 +365,7 @@ function ModalTambahUser() {
                               onClick={() => {
                                 handle_step1();
                               }}  
-                              className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                              className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                           </div>
@@ -361,7 +380,7 @@ function ModalTambahUser() {
                             transition={{ duration: 0.3 }}
                             className="md:w-3/5 mx-auto py-12">
                             
-                            <div className="mt-12 text-base  text-center">
+                            <div className="mt-12 textsize10  text-center">
                                 Yakin Data Sudah Benar ?
                             </div>
                             <div>
@@ -369,12 +388,12 @@ function ModalTambahUser() {
                                     <button 
                                         type="button"
                                         onClick={prevStep}
-                                        className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                        className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                         <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                     </button>
                                     <button 
                                         type="submit"
-                                        className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                        className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                         <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                     </button>
                                 </div>

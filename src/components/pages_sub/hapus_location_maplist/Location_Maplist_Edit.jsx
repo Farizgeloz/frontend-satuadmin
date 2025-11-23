@@ -29,8 +29,9 @@ import { MdDashboard,MdDataset,MdOutlineErrorOutline,
 import useFetch from './useFeach';
 
 import _ from "lodash";
+import { api_url_satuadmin } from '../../../api/axiosConfig';
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 
 
@@ -133,7 +134,7 @@ function Location_MaplistPengelolah() {
   
 
   const getLocation_MaplistItem = async () => {
-    const response = await axios.get(apiurl + 'satupeta/map_item');
+    const response = await api_url_satuadmin.get('satupeta/map_item');
 
     const data = response.data;
     setsatkerku(response.data.resultsatker);
@@ -143,7 +144,7 @@ function Location_MaplistPengelolah() {
   
 
   const getDataById = async () => {
-    const response = await axios.get(apiurl+`satupeta/locationmaplist_detail/${id}`);
+    const response = await api_url_satuadmin.get(`satupeta/locationmaplist_detail/${id}`);
     setid(response.data.id);
     setkoleksi_data(response.data.koleksi_data);
     settitle(response.data.title);
@@ -171,7 +172,7 @@ function Location_MaplistPengelolah() {
     formData.append("tahun_rilis",tahun);
     formData.append("visibilitas",visibilitas);
     try {
-      await axios.patch(`${apiurl}satupeta/locationmaplist_update/${idku}`, formData, {
+      await api_url_satuadmin.patch(`satupeta/locationmaplist_update/${idku}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -271,15 +272,15 @@ function Location_MaplistPengelolah() {
     <div className="bg-gray-100  h-95    overflow-auto z-5 max-[640px]:mt-10">
       <NavSub  title="Location Maplist Edit" />
       <div className="col-span-6">
-        <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
-          <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-            <MdDashboard className="mt-1 textsize8"/>Dashboard
+        <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-1 mx-3 mb-0">
+          <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+            <MdDashboard className="mt-1 textsize10"/>Dashboard
           </NavLink> / 
-          <NavLink to="/Data-Location_Maplist" className="text-link-sky mx-2 d-flex">
-            <MdDataset className="mt-1 textsize8" />Location Maplist
+          <NavLink to="/Data-Location_Maplist" className="text-silver-a mx-2 d-flex">
+            <MdDataset className="mt-1 textsize10" />Location Maplist
           </NavLink> /
-          <NavLink  className="text-link-sky mx-2 d-flex">
-            <MdEditSquare className="mt-1 textsize8" />Edit
+          <NavLink  className="text-silver-a mx-2 d-flex">
+            <MdEditSquare className="mt-1 textsize10" />Edit
           </NavLink>
         </p>
       </div>
@@ -614,7 +615,7 @@ function Location_MaplistPengelolah() {
                                 onClick={() => {
                                   handle_step1();
                                 }}
-                                className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <span>Lanjut</span><MdArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                               
@@ -684,12 +685,12 @@ function Location_MaplistPengelolah() {
                           <div className="flex justify-center mt-12">
 
                             <button 
-                                onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
+                                onClick={prevStep} className="bg-gray-500 hover:bg-gray-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded-xl d-flex mx-1">
                                 <MdOutlineArrowCircleLeft   className='mt-1 mx-1'  /><span>Kembali</span>
                             </button>
                             
                             <button 
-                                onClick={nextStep} className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                onClick={nextStep} className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <span>Lanjut</span><MdOutlineArrowCircleRight  className='mt-1 mx-1'  />
                             </button>
                           </div>
@@ -731,7 +732,7 @@ function Location_MaplistPengelolah() {
                           <div className="-mt-5 w-full h-2 bg-cyan-200">
                               <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                           </div>
-                          <div className="mt-12 text-base  text-center">
+                          <div className="mt-12 textsize10  text-center">
                               Yakin Data Sudah Benar ?
                           </div>
                           <div>
@@ -739,12 +740,12 @@ function Location_MaplistPengelolah() {
                                 <button 
                                     type="button"
                                     onClick={prevStep}
-                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                    className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                     <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                                 </button>
                                 <button 
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                    className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                     <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                                 </button>
                               </div>

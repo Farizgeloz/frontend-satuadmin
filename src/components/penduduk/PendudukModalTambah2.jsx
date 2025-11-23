@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Modal.css";
-import "../../App.css";
+import "../../styles/App.css";
 
 import { 
   IoAddCircleOutline,
@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 
 
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 
 function ModalPendudukTambah() {
@@ -61,7 +61,7 @@ function ModalPendudukTambah() {
   }, []);
  
   const getKabupaten = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`get_kabupaten`
     );
     setListKabupatenku(response.data.result);
@@ -70,7 +70,7 @@ function ModalPendudukTambah() {
  
 
   const getKecamatan = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`get_kecamatan`
     );
     setListKecamatanku(response.data.result);
@@ -79,7 +79,7 @@ function ModalPendudukTambah() {
  
 
   const getdesa = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`get_desa`
     );
     setListDesaku(response.data.result);
@@ -167,7 +167,7 @@ function ModalPendudukTambah() {
             className="col-span-2 text-link-sky text-center tsize-110 mt-1">
             <div className=" rounded-full py-2 px-2 h-10 mr-2 text-center  flex bg-white">
               <IoAddCircleOutline className="tsize-120 text-sky-600"  />
-              <span className="tsize-90">Tambah Data Baru</span>
+              <span className="textsize12">Tambah Data Baru</span>
             </div>
             
         </a>
@@ -179,7 +179,7 @@ function ModalPendudukTambah() {
             keyboard={false} >
           <form onSubmit={savePenduduk}>
             <Modal.Header closeButton className="border-b ">
-                <h4 className="text-sky-600 flex"><IoAddCircleOutline  className="tsize-90 text-sky-600 mt-1"  />Tambah Data Penduduk</h4>
+                <h4 className="text-sky-600 flex"><IoAddCircleOutline  className="textsize12 text-sky-600 mt-1"  />Tambah Data Penduduk</h4>
                   
             </Modal.Header>
             <Modal.Body className="mt-2">
@@ -195,7 +195,7 @@ function ModalPendudukTambah() {
                         onChange={(e) => setName(e.target.value)}
                         type="text"
                         autoComplete="nama"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize12"
                         />
                     </div>
                 </div>
@@ -210,7 +210,7 @@ function ModalPendudukTambah() {
                         onChange={(e) => setNik(e.target.value)}
                         type="number"
                         autoComplete="nik"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize12"
                         />
                     </div>
                 </div>
@@ -227,7 +227,7 @@ function ModalPendudukTambah() {
                         onChange={(e) => setTgl_Lahir(e.target.value)}
                         type="date"
                         autoComplete="tgl_lahir"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize12"
                         />
                     </div>
                 </div>
@@ -242,7 +242,7 @@ function ModalPendudukTambah() {
                         onChange={(e) => setTempat_Lahir(e.target.value)}
                         type="text"
                         autoComplete="tempat_lahir"
-                        className="input-gray tsize-90"
+                        className="input-gray textsize12"
                         />
                     </div>
                 </div>
@@ -256,7 +256,7 @@ function ModalPendudukTambah() {
                   <div className="mt-2">
                       
                       <input
-                        className="input-gray tsize-90"
+                        className="input-gray textsize12"
                         placeholder="kabupaten"
                         onFocus={() => setIsFocusKabupaten(true)}
                         onBlur={() => {
@@ -309,7 +309,7 @@ function ModalPendudukTambah() {
                   <div className="mt-2">
                       
                       <input
-                        className="input-gray tsize-90"
+                        className="input-gray textsize12"
                         placeholder="Kecamatan"
                         onFocus={() => setIsFocusKecamatan(true)}
                         onBlur={() => {
@@ -362,7 +362,7 @@ function ModalPendudukTambah() {
                   <div className="mt-2">
                       
                       <input
-                        className="input-gray tsize-90"
+                        className="input-gray textsize12"
                         placeholder="Desa"
                         onFocus={() => setIsFocusDesa(true)}
                         onBlur={() => {
@@ -417,7 +417,7 @@ function ModalPendudukTambah() {
                           value={jk}
                           onChange={(e) => setJK(e.target.value)}
                           autoComplete="role"
-                          className="input-gray tsize-90"
+                          className="input-gray textsize12"
                           >
                           <option value="L">L</option>
                           <option value="P">P</option>
@@ -433,7 +433,7 @@ function ModalPendudukTambah() {
                         <select
                           onChange={(e) => setStatusKawin(e.target.value)}
                           autoComplete="role"
-                          className="input-gray tsize-90"
+                          className="input-gray textsize12"
                           >
                           <option value="Belum Kawin">Belum Kawin</option>
                           <option value="Kawin">Kawin</option>
@@ -452,7 +452,7 @@ function ModalPendudukTambah() {
                           value={agama}
                           onChange={(e) => setAgama(e.target.value)}
                           autoComplete="role"
-                          className="input-gray tsize-90"
+                          className="input-gray textsize12"
                           >
                           <option value="Islam">Islam</option>
                           <option value="Buddha">Buddha</option>
@@ -474,7 +474,7 @@ function ModalPendudukTambah() {
                           value={pendidikan}
                           onChange={(e) => setPedidikan(e.target.value)}
                           autoComplete="role"
-                          className="input-gray tsize-90"
+                          className="input-gray textsize12"
                           >
                           <option value="SD">SD</option>
                           <option value="SMP">SMP</option>
@@ -496,7 +496,7 @@ function ModalPendudukTambah() {
                           value={kepala_keluarga}
                           onChange={(e) => setKepalaKeluarga(e.target.value)}
                           autoComplete="role"
-                          className="input-gray tsize-90"
+                          className="input-gray textsize12"
                           >
                           <option value="Anggota">Anggota</option>
                           <option value="Kepala">Kepala</option>

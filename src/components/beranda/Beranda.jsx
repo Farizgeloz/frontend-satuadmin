@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import "../../App.css";
+import "../../styles/App.css";
 import { IoTrash,
   IoChevronBackSharp ,
   IoChevronForward,
@@ -19,7 +19,6 @@ import {
   lineChartOptions
 } from "../chartku/options";
 
-const apiurl=process.env.REACT_APP_URL;
 
 const Beranda = () => {
   const [pendudukku, setPenduduk] = useState([]);
@@ -35,7 +34,7 @@ const Beranda = () => {
   }, []);
 
   const getPenduduk = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`backend_dashboard`
     );
     setPenduduk(response.data.resultpenduduk);
@@ -52,8 +51,8 @@ const Beranda = () => {
     <div className="bg-gray-100  max-h-screen  max-[640px]:mt-12  overflow-y-auto">
       <div className="col-span-6 rounded gap-x-6 grid grid-cols-1 grid-cols-6 h-14 bg-white mb-10">
         <p className="col-span-4 max-[640px]:col-span-3 tsize-130 font-semibold text-sky-600 flex pt-2"><IoSearchCircle  className="mt-2 mx-2"  />Dashboard</p>
-        <p className="col-span-2 max-[640px]:col-span-3 tsize-90 font-semibold text-gray-500 flex flex-row-reverse pt-2 mt-2 mx-3">
-          <NavLink to="/Dashboard" className="text-link-gray">Dashboard</NavLink>
+        <p className="col-span-2 max-[640px]:col-span-3 textsize12 font-semibold text-gray-500 flex flex-row-reverse pt-2 mt-2 mx-3">
+          <NavLink to="/Dashboard" className="text-silver-a">Dashboard</NavLink>
         </p>
         <div className="col-span-6">
           <div className="garis2 garis1b"></div>

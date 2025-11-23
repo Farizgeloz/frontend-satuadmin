@@ -16,21 +16,22 @@ import { IoAdd, IoTrash } from "react-icons/io5";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import ClearIcon from "@mui/icons-material/Clear";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-const apiurl=process.env.REACT_APP_URL;
+
 const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
 const userloginsatker = userlogin.satker_id || '';
 const userloginadmin = userlogin.id || '';
 
 const textFieldStyle = (theme) => ({
   "& .MuiOutlinedInput-root": {
-    height: 50,
-    fontSize: "0.9rem",
+    height: 60,
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -53,12 +54,12 @@ const textFieldStyle = (theme) => ({
 const textFieldStyleMultiline = (theme) => ({
   "& .MuiOutlinedInput-root": {
     height: "auto",
-    fontSize: "0.9rem",
+    fontSize: "1.2rem",
     background: "#ecfccb",
     borderRadius: "6px",
   },
   "& .MuiInputLabel-root": {
-    fontSize: "0.85rem",
+    fontSize: "1.0rem",
     fontWeight: 600,
     transition: "all 0.2s ease",
   },
@@ -79,19 +80,20 @@ const textFieldStyleMultiline = (theme) => ({
 });
 
 function ModalTambahMulti() {
-  const [bidangurusanku, setbidangurusanku] = useState([""]);
+  const [sektorku, setsektorku] = useState([""]);
   const [satkerku, setsatkerku] = useState([""]);
   const [locationku, setlocationku] = useState([""]);
+  const [loading, setLoading] = useState(false);
   
 
   const [locations, setLocations] = useState([
-    { nama_location: "", satker_id: "", bidang_urusan_id: "" }
+    { nama_location: "", satker_id: "", sektor_id: "" }
   ]);
 
   const addLocationField = () => {
     setLocations([
       ...locations,
-      { nama_location: "", satker_id: "", bidang_urusan_id: "" }
+      { nama_location: "", satker_id: "", sektor_id: "" }
     ]);
   };
 
@@ -133,18 +135,20 @@ function ModalTambahMulti() {
       location_id: loc.location_id?.value?.toString() ?? "",
       title: loc.title?.trim() ?? "",
       satker_id: loc.satker_id?.value?.toString() ?? "",
-      bidang_urusan_id: loc.bidang_urusan_id?.value?.toString() ?? "",
+      sektor_id: loc.sektor_id?.value?.toString() ?? "",
       periode: loc.periode?.value ?? "",
       tahun_rilis: loc.tahun_rilis?.toString() ?? "",
       pengukuran: loc.pengukuran?.trim() ?? "",
       visibilitas: loc.visibilitas?.value ?? "",
       deskripsi: loc.deskripsi?.trim() ?? "",
-      admin: userloginadmin?.toString() ?? ""
+      admin: userloginadmin?.toString() ?? "",
     }));
 
     const formData = new FormData();
     formData.append("locations", JSON.stringify(payloadLocations));
     formData.append("admin", String(userloginadmin));
+    formData.append("jenis", "Satu Peta Koleksi");
+    formData.append("komponen", "Tambah Koleksi Satu Peta" );
 
     // kalau ada file upload
     locations.forEach((loc, idx) => {
@@ -154,11 +158,23 @@ function ModalTambahMulti() {
     });
 
     try {
-      await axios.post(apiurl + "api/satupeta/location_maplist/addmulti", formData, {
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses tambah data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.post("api/satupeta/Koleksi-Peta/addmulti", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       setShow(false);
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
     } catch (error) {
       console.error(error);
@@ -182,11 +198,11 @@ function ModalTambahMulti() {
   const handleShow = () => setShow(true);
 
   const getDatasetItem = async () => {
-    const response = await axios.get(apiurl + "api/satupeta/map_item2", {
+    const response = await api_url_satuadmin.get("api/satupeta/map_item2", {
       params: { search_satker:userloginsatker }
     });
     setlocationku(response.data.resultlocation);
-    setbidangurusanku(response.data.resultbidangurusan);
+    setsektorku(response.data.resultsektor);
     setsatkerku(response.data.resultsatker);
   };
 
@@ -216,39 +232,34 @@ function ModalTambahMulti() {
     }
   };*/
 
-  function sweetsuccess(){
+  function sweetsuccess() {
     Swal.fire({
-        title: "Sukses",
-        html: "Data Berhasil Disimpan",
-        timer: 2000,
-        icon: "success",
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-          
-        },
-        willClose: () => {
-            navigate(0);
-        }
-      }).then((result) => {
-      });
-  };
-  function sweeterror(error){
-      Swal.fire({
-          title: "Gagal",
-          html: error,
-          timer: 1500,
-          icon: "error",
-          timerProgressBar: true,
-          didOpen: () => {
-            Swal.showLoading();
-            
-          },
-          willClose: () => {
-          }
-        }).then((result) => {
-        });
-  };
+      title: "Sukses",
+      html: "Data Berhasil Disimpan",
+      timer: 2000,
+      icon: "success",
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      willClose: () => {
+        navigate(0);
+      },
+    });
+  }
+
+  function sweeterror(error) {
+    Swal.fire({
+      title: "Gagal",
+      html: error,
+      timer: 1500,
+      icon: "error",
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+  }
 
   const [step, setStep] = useState(1);
 
@@ -293,8 +304,8 @@ function ModalTambahMulti() {
         rowErrors.satker_id = "Satker wajib dipilih";
       }
 
-      if (!loc.bidang_urusan_id) {
-        rowErrors.bidang_urusan_id = "Bidang urusan wajib dipilih";
+      if (!loc.sektor_id) {
+        rowErrors.sektor_id = "Sektor wajib dipilih";
       }
 
       if (!loc.periode) {
@@ -339,7 +350,7 @@ function ModalTambahMulti() {
 
   return (
     <>
-         <Link onClick={handleShow} className="col-span-1 max-[640px]:col-span-2 tsize-130 font-semibold text-white-a flex-right mt-2">
+         <Link onClick={handleShow} className="col-span-3 max-[640px]:col-span-2 tsize-130 font-semibold text-white-a mt-2">
           <button 
             className="styles_button__u_d5l h-6v hover:bg-teal-600 text-white font-bold py-1 px-4 border-b-4 border-teal-600 hover:border-teal-500 rounded-xl d-flex">
               <MdAddCircle className="mt-1 mx-1" /><span>Tambah Data</span>
@@ -354,7 +365,7 @@ function ModalTambahMulti() {
         >
             <form onSubmit={saveDataset}>
             <Modal.Header closeButton className="border-b ">
-                <h4 className="text-sky-600 flex"><MdAddCircle  className="tsize-90 text-sky-600 mt-1"  />Tambah Lokasi Point</h4>
+                <h4 className="text-sky-600 flex"><MdAddCircle  className="textsize10 text-sky-600 mt-1"  />Tambah Lokasi Maplist</h4>
                 
             </Modal.Header>
             <Modal.Body className="mt-2 bg-silver-light p-0">
@@ -553,23 +564,23 @@ function ModalTambahMulti() {
                                       <Autocomplete
                                         className='tsize-110'
                                         isOptionEqualToValue={(option, value) => option?.value === value?.value}
-                                        id="combo-box-bidangurusan"
-                                        options={bidangurusanku.map((row) => ({
-                                          label: row.nama_bidang_urusan,
-                                          value: row.id_bidang_urusan
+                                        id="combo-box-sektor"
+                                        options={sektorku.map((row) => ({
+                                          label: row.nama_sektor,
+                                          value: row.id_sektor
                                         }))}
                                         getOptionLabel={(option) => option.label || ""}
-                                        value={loc.bidang_urusan_id || null}
-                                        onChange={(event, newValue) => handleChange(index, "bidang_urusan_id",newValue)}
+                                        value={loc.sektor_id || null}
+                                        onChange={(event, newValue) => handleChange(index, "sektor_id",newValue)}
                                         clearOnEscape
                                         renderInput={(params) => (
                                           <TextField
                                             {...params}
-                                            label="Bidang Urusan"
+                                            label="Sektor"
                                             variant="outlined"
                                             sx={(theme) => textFieldStyle(theme)}
-                                            error={!!errors[index]?.bidang_urusan_id}
-                                            helperText={errors[index]?.bidang_urusan_id}
+                                            error={!!errors[index]?.sektor_id}
+                                            helperText={errors[index]?.sektor_id}
                                           />
                                         )}
                                         sx={{
@@ -828,7 +839,7 @@ function ModalTambahMulti() {
                         <button 
                             type="button"
                             onClick={handleNext}
-                            className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                            className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                             <MdOutlineSave  className='mt-1 mx-1'  /><span>Lanjut</span>
                         </button>
                        
@@ -865,7 +876,7 @@ function ModalTambahMulti() {
                       <div className="-mt-5 w-full h-2 bg-cyan-200">
                           <div className="h-full bg-cyan-600 rounded-3xl w-full"></div>
                       </div>
-                      <div className="mt-12 text-base  text-center">
+                      <div className="mt-12 textsize10  text-center">
                           Yakin Data Sudah Benar ?
                       </div>
                       <div>
@@ -873,12 +884,12 @@ function ModalTambahMulti() {
                             <button 
                                 type="button"
                                 onClick={prevStep}
-                                className="bg-slate-500 hover:bg-slate-400 text-white font-bold py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
+                                className="bg-slate-500 hover:bg-slate-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-slate-700 hover:border-slate-500 rounded-xl d-flex mx-1">
                                 <MdOutlineArrowCircleLeft  className='mt-1 mx-1'  /><span>Kembali</span>
                             </button>
                             <button 
                                 type="submit"
-                                className="bg-green-500 hover:bg-green-400 text-white font-bold py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
+                                className="bg-green-500 hover:bg-green-400 text-white font-bold textsize10 py-1 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-xl d-flex mx-1">
                                 <MdOutlineSave  className='mt-1 mx-1'  /><span>Simpan</span>
                             </button>
                           </div>

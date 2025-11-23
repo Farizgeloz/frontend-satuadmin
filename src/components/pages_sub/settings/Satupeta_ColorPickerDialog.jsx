@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import Swal from 'sweetalert2';
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
-const apiurl = process.env.REACT_APP_URL;
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const userloginadmin = userlogin.id || '';
 
 const ColorPickerDialog = ({ isOpen, onClose, rowData, onSave }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [colors, setColors] = useState({
     id: null,
     bg_header: '',
@@ -41,7 +44,7 @@ const ColorPickerDialog = ({ isOpen, onClose, rowData, onSave }) => {
 
   const getSatuportal_listSearch = async () => {
     try {
-      const response = await axios.get(apiurl + 'api/open-item/site_satupeta_setting');
+      const response = await api_url_satuadmin.get('api/open-item/site_satupeta_setting');
       const res = response.data;
 
       if (Array.isArray(res) && res.length > 0) {
@@ -72,13 +75,27 @@ const ColorPickerDialog = ({ isOpen, onClose, rowData, onSave }) => {
     formData.append('bg_content', colors.bg_content);
     formData.append('color_title', colors.color_title);
     formData.append('color_date', colors.color_date);
+    formData.append("admin",userloginadmin);
+    formData.append("jenis","Satu Peta Color");
+    formData.append("komponen","Update Color Satu Peta");
     try {
-      await axios.patch(`${apiurl}api/open-item/site_satupeta_setting_update/${colors.id}`, formData, {
+      setLoading(true);
+      // tampilkan loading swal
+      Swal.fire({
+        title: "Mohon Tunggu",
+        html: "Sedang memproses update data...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await api_url_satuadmin.patch(`api/open-item/site_satupeta_setting_update/${colors.id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      
+      setLoading(false);
+      Swal.close(); // tutup loading swal
       sweetsuccess();
       onClose();
     } catch (error) {

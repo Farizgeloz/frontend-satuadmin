@@ -6,14 +6,22 @@ import { motion } from "framer-motion";
 import { DataGrid } from "@mui/x-data-grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import NavSub from "../../NavSub";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row,Tabs, Tab } from "react-bootstrap";
+import qs from 'qs';
 
-import UserModalTambah from "./UserModalTambah"
-import UserModalDelete from "./UserModalDelete"
+import UserModalTambah from "./UserModalTambah";
+import UserModalDelete from "./UserModalDelete";
+
+import Activity from "../log/Activity";
+import { api_url_satuadmin } from "../../../api/axiosConfig";
+
+const rolelogin = localStorage.getItem('role');
+const userlogin = JSON.parse(localStorage.getItem('user') || '{}');
+const useropdlogin = userlogin.opd_id || '';
 
 
 //const apikey=process.env.REACT_APP_API_KEY;
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 const theme = createTheme({
   components: {
     MuiTablePagination: {
@@ -39,14 +47,18 @@ const Userlist = () => {
   }, []);
 
   /*const getUsers = async () => {
-    const response = await axios.get("http://localhost:5000/users2");
+    const response = await api_url_satuadmin.get("http://localhost:5000/users2");
     setUsers(response.data);
   };*/
   const getUsers = async () => {
-    const response = await axios.get(
-      `${apiurl}api/open-user/user`
-    );
-    //console.log(response.data.resultsearch);
+    const response = await api_url_satuadmin.get('api/open-user/user', {
+      params: {
+        search_opd: useropdlogin,
+        search_role: rolelogin
+      },
+      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' })
+    });
+    //console.log(response.data);
     setUsers(response.data);
     setRowsFiltered(response.data);
     
@@ -119,8 +131,8 @@ const Userlist = () => {
       minWidth: 100 
     },
     { 
-      field: "satker_jabatan", 
-      headerName: "Satker & Jabatan", 
+      field: "nama_opd", 
+      headerName: "Satker", 
       flex: 3,  // 30%
       headerClassName: "custom-header", // kelas custom
       minWidth: 100,
@@ -131,9 +143,6 @@ const Userlist = () => {
            
             {row.nama_opd && (
               <p className="textsize10 mb-0">{row.nama_opd}</p>
-            )}
-            {row.jabatan && (
-              <p className="textsize10">({row.jabatan})</p>
             )}
           </div>
         );
@@ -163,7 +172,7 @@ const Userlist = () => {
             className="flex items-center justify-center mb-[2px]"
           >
             <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-3 rounded-xl flex items-center">
-              <MdEditSquare className="mr-1" />
+              <MdEditSquare className="mr-1"  size={18}/>
             </button>
           </Link>
           <UserModalDelete id={params.row.id} name={params.row.nick} />
@@ -184,12 +193,12 @@ const Userlist = () => {
       <NavSub  title="Data USer" />
       <div className="col-span-3 rounded grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-6 drop-shadow-lg">
         <div className="col-span-3">
-          <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-              <MdDashboard className="mt-1 textsize8"/>Dashboard
+          <p className="font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
+            <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex textsize10">
+              <MdDashboard className="mt-1 textsize10"/>Dashboard
             </NavLink> / 
-            <NavLink to="/Data-User" className="text-link-sky mx-2 d-flex">
-              <MdDataset className="mt-1 textsize8" />Data User
+            <NavLink to="/Data-User" className="text-silver-a mx-2 d-flex textsize10">
+              <MdDataset className="mt-1 textsize10" />Data User
             </NavLink>
           </p>
         </div>
@@ -198,94 +207,110 @@ const Userlist = () => {
           <UserModalTambah/>
         </div>
       </div>
-      <div className="drop-shadow-lg overflow-auto mb-9 p-2">
-        <section className="py-3 rounded-lg bg-white px-2">
+      <div className="drop-shadow-lg overflow-xx-auto mb-9 p-2">
+        <section id="teams" className="block   py-3 rad15 shaddow1 bg-white px-2">
           
-          <div className="text-center">
-            <p className="text-sage textsize8 ">Pencarian berdasarkan Judul, Kategori atau Isi Konten.</p>
-            <div className="mb-3">
-                <input
-                  type="text"
-                  value={searchText}
-                  onChange={(e) => handleSearch(e.target.value)}
-                  placeholder="Cari data..."
-                  className="border p-2 rounded w-64 input-green2"
-                />
-              </div>
-          </div>
+          
           <Container fluid>
-            <Row className='portfoliolist'>
-              <Col sm={12}>
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  viewport={{ once: true }}
-                >
-                  <ThemeProvider theme={theme}>
-                    <DataGrid
-                      loading={loading}
-                      rows={filteredRows}
-                      columns={columns}
-                      pageSizeOptions={[5, 10, 50, 100]}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { pageSize: 10, page: 0 }
-                        }
-                      }}
-                    
-                      disableSelectionOnClick
-                      getRowHeight={() => 'auto'}
-                      
-                      sx={{
-                        "& .custom-header": {
-                          backgroundColor: "#1886ca",
-                          color: "white",
-                          fontWeight: "bold",
-                          textTransform: "uppercase",
-                          fontSize: "80%"
-                        },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon": {
-                          opacity: 1,
-                          visibility: "visible",
-                          width: "auto",
-                          color: "#fff"
-                        },
-                        "& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon": {
-                          opacity: 1
-                        },
-                        "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon button svg": {
-                          fill: "#fff"
-                        },
-                        '& .MuiDataGrid-cell': {
-                          whiteSpace: 'normal', // biar teks wrap
-                          lineHeight: '1.2rem',  // lebih rapat
-                          padding: '8px'
-                        },
-                        "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
-                          display: "none" // sembunyikan opsi default MUI yang tidak diinginkan
-                        },
-                        "& .MuiTablePagination-selectLabel": {
-                          color: "#444",
-                          fontWeight: "bold",
-                          marginTop: "15px"
-                        },
-                        "& .MuiTablePagination-displayedRows": {
-                          color: "#666",
-                          marginTop: "15px"
-                        },
-                        "& .MuiTablePagination-select": {
-                          color: "#000",
-                          fontWeight: "600",
-                          backgroundColor: "#dbdbdb",
-                          borderRadius: "6px"
-                        }
-                      }}
-                    />
-                  </ThemeProvider>
-                </motion.div>
-              </Col>
-            </Row>
+            <Tabs
+              defaultActiveKey="home"
+              id="example-tabs"
+              className="mb-3"
+            >
+              <Tab eventKey="home" title="Tabel">
+                <div className="text-center">
+                  <p className="text-sage textsize10 ">Pencarian berdasarkan Nama, Nick atau Email.</p>
+                  <div className="mb-3 w-100">
+                      <input
+                        type="text"
+                        value={searchText}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        placeholder="Cari data..."
+                        className="border p-2 rounded w-100 input-gray textsize10"
+                      />
+                    </div>
+                </div>
+                <Row className='portfoliolist'>
+                  <Col sm={12}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      viewport={{ once: true }}
+                    >
+                      <ThemeProvider theme={theme}>
+                        <DataGrid
+                          loading={loading}
+                          rows={filteredRows}
+                          columns={columns}
+                          pageSizeOptions={[5, 10, 50, 100]}
+                          initialState={{
+                            pagination: {
+                              paginationModel: { pageSize: 10, page: 0 }
+                            }
+                          }}
+                        
+                          disableSelectionOnClick
+                          getRowHeight={() => 'auto'}
+                          
+                          sx={{
+                            "& .custom-header": {
+                              backgroundColor: "#1886ca",
+                              color: "white",
+                              fontWeight: "bold",
+                              textTransform: "uppercase",
+                              fontSize: "100%"
+                            },
+                            "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon": {
+                              opacity: 1,
+                              visibility: "visible",
+                              width: "auto",
+                              color: "#fff"
+                            },
+                            "& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon": {
+                              opacity: 1
+                            },
+                            "& .MuiDataGrid-columnHeader .MuiDataGrid-menuIcon button svg": {
+                              fill: "#fff"
+                            },
+                            '& .MuiDataGrid-cell': {
+                              whiteSpace: 'normal', // biar teks wrap
+                              lineHeight: '1.2rem',  // lebih rapat
+                              padding: '8px'
+                            },
+                            "& .MuiTablePagination-select option:not([value='5']):not([value='10']):not([value='20'])": {
+                              display: "none" // sembunyikan opsi default MUI yang tidak diinginkan
+                            },
+                            "& .MuiTablePagination-selectLabel": {
+                              color: "#444",
+                              fontWeight: "bold",
+                              marginTop: "15px"
+                            },
+                            "& .MuiTablePagination-displayedRows": {
+                              color: "#666",
+                              marginTop: "15px"
+                            },
+                            "& .MuiTablePagination-select": {
+                              color: "#000",
+                              fontWeight: "600",
+                              backgroundColor: "#dbdbdb",
+                              borderRadius: "6px"
+                            }
+                          }}
+                        />
+                      </ThemeProvider>
+                    </motion.div>
+                  </Col>
+                </Row>
+              </Tab>
+
+              <Tab eventKey="profile" title="Aktivitas">
+                  <Activity kunci={'Satu Admin Pengguna'}/>
+              </Tab>
+
+             
+            </Tabs>
+            
           </Container>
         </section>
       </div>

@@ -9,9 +9,10 @@ import { IoTrash } from "react-icons/io5";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2';
+import { api_url_satuadmin } from "../../../api/axiosConfig";
 
 
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 
 
 
@@ -28,7 +29,7 @@ function ModalDelete(props) {
   const deleteUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.delete(apiurl+`satupeta/locationmaplist_delete/${id}`);
+      await api_url_satuadmin.delete(`satupeta/locationmaplist_delete/${id}`);
       //navigate("/");
       setShow(false);
       sweetsuccess();

@@ -54,23 +54,26 @@ const Nav = (props) => {
   };
 
   return (
-    <div className="col-span-6 gap-x-6 grid grid-cols-1 grid-cols-6 h-14 bg-linear-8 mb-1 shaddow2 bg-white-borderbotom">
+    <div className="col-span-6 gap-x-6 grid grid-cols-6 h-15 bg-linear-8 mb-1 shaddow2 bg-white-borderbotom">
       <p className="col-span-4 max-[640px]:col-span-6 tsize-130 font-semibold text-white flex pt-3 uppercaseku">
         <MdArticle className="mt-1 mx-2" />
         {title}
       </p>
 
-      <Dropdown className="col-span-2 max-[650px]:hidden">
-        <Dropdown.Toggle id="dropdown-basic" className="bg-transparan d-flex mt-2">
-          {rolelogin} {usernicklogin}
-          <MdAccountCircle className="-mt-1 mx-2 textsize16" />
-        </Dropdown.Toggle>
+      <div className="col-span-2 max-[650px]:hidden flex justify-end items-center pr-4">
+        <Dropdown>
+          <Dropdown.Toggle id="dropdown-basic" className="bg-transparan d-flex mt-2 textsize12">
+            {rolelogin} {usernicklogin}
+            <MdAccountCircle className="-mt-1 mx-2 textsize16" />
+          </Dropdown.Toggle>
 
-        <Dropdown.Menu>
-          <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
     </div>
+
   );
 };
 

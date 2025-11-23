@@ -23,7 +23,7 @@ import {
   
 
 //const apikey=process.env.REACT_APP_API_KEY;
-const apiurl=process.env.REACT_APP_URL;
+const apiurl =  import.meta.env.VITE_API_URL;;
 
 const Penduduklist = () => {
   const [pendudukku, setPenduduk] = useState([]);
@@ -48,11 +48,11 @@ const Penduduklist = () => {
   }, [page, keywordnama, keywordnik, keywordtgl_lahir, keywordrole]);
 
   /*const getPenduduk = async () => {
-    const response = await axios.get("http://localhost:5000/pendudukku2");
+    const response = await api_url_satuadmin.get("http://localhost:5000/pendudukku2");
     setPenduduk(response.data);
   };*/
   const getPenduduk = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`backend_penduduk?search_nama=${keywordnama}&search_nik=${keywordnik}&search_tgl_lahir=${keywordtgl_lahir}&search_role=${keywordrole}&page=${page}&limit=${limit}`
     );
     setPenduduk(response.data.result);
@@ -89,7 +89,7 @@ const Penduduklist = () => {
       <div className="col-span-6 rounded gap-x-6 grid grid-cols-1 grid-cols-6 h-14 bg-white mb-10">
         <p className="col-span-4 max-[640px]:col-span-3 tsize-110 font-semibold text-sky-600 flex pt-2"><IoAlbums  className="mt-2 mx-2"  />Data Penduduk</p>
         <p className="col-span-2 max-[640px]:col-span-3 tsize-70 font-semibold text-gray-500 flex flex-row-reverse pt-2 mt-2 mx-3">
-          <NavLink to="/Dashboard" className="text-link-gray">Dashboard</NavLink> / <NavLink to="/Data-Penduduk" className="text-link-gray">Data Penduduk</NavLink>
+          <NavLink to="/Dashboard" className="text-silver-a">Dashboard</NavLink> / <NavLink to="/Data-Penduduk" className="text-silver-a">Data Penduduk</NavLink>
         </p>
         <div className="col-span-6">
           <div className="garis2 garis1b"></div>

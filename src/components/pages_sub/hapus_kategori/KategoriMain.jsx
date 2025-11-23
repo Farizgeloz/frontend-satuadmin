@@ -30,7 +30,7 @@ import {
   } from "react-icons/io5";
 
 //const apikey=process.env.REACT_APP_API_KEY;
-const apiurl=process.env.REACT_APP_URL;
+const apiurl = import.meta.env.VITE_API_URL;
 const Spinner = () => <div className="loader "></div>;
 const { SearchBar } = Search;
 const { ExportCSVButton } = CSVExport;
@@ -61,11 +61,11 @@ const Kategorilist = () => {
   }, []);
 
   /*const getUsers = async () => {
-    const response = await axios.get("http://localhost:5000/kategoris2");
+    const response = await api_url_satuadmin.get("http://localhost:5000/kategoris2");
     setUsers(response.data);
   };*/
   const getKategori = async () => {
-    const response = await axios.get(
+    const response = await api_url_satuadmin.get(
       apiurl+`backend_satudata_kategori`
     );
     setKategori(response.data.resultkategori);
@@ -182,12 +182,12 @@ const Kategorilist = () => {
       <NavSub  title="Data Kategori Sektoral" />
       <div className="rounded grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-6 drop-shadow-lg">
         <div className="md:col-span-3">
-          <p className=" tsize-90 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
-            <NavLink to="/Dashboard" className="text-link-sky mr-2 d-flex">
-              <MdDashboard className="mt-1 textsize8"/>Dashboard
+          <p className=" textsize10 font-semibold text-gray-300 flex pt-2 mt-2 mx-3 mb-0">
+            <NavLink to="/Dashboard" className="text-silver-a mr-2 d-flex">
+              <MdDashboard className="mt-1 textsize10"/>Dashboard
             </NavLink> / 
-            <NavLink to="/Data-Kategori" className="text-link-sky mx-2 d-flex">
-              <MdDataset className="mt-1 textsize8" />Data Kategori
+            <NavLink to="/Data-Kategori" className="text-silver-a mx-2 d-flex">
+              <MdDataset className="mt-1 textsize10" />Data Kategori
             </NavLink>
           </p>
         </div>
